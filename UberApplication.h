@@ -3,13 +3,15 @@
 #include "Driver.h"
 #include "DynamicArray.hpp"
 #include "SessionManager.h"
-#include "UniquePointer.hpp"
+#include "Order.h"
 
 class UberApplication // singleton
 {
-	SessionManager session;
+	SessionManager sessionManager;
 
 public:
+	UberApplication() = default;
+
 	DynamicArray<Client> clients;
 	DynamicArray<Driver> drivers;
 	DynamicArray<Order> orders;

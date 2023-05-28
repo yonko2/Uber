@@ -9,8 +9,9 @@
 template<typename T>
 class UniquePointer {
 private:
-	T* ptr;
+	T* ptr = nullptr;
 public:
+	UniquePointer() = default;
 	UniquePointer(T* ptr);
 	UniquePointer(const UniquePointer<T>& ptr) = delete;
 	UniquePointer& operator=(const UniquePointer<T>& ptr) = delete;
