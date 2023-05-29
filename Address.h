@@ -5,7 +5,7 @@
 struct Address
 {
 	MyString name;
-	Pair<int, int> coordinates;
+	Pair<int, int> coordinates{};
 	MyString description; // not required
 
 	Address() = default;

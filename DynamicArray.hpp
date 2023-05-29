@@ -146,12 +146,12 @@ void DynamicArray<T>::free()
 template <typename T>
 void DynamicArray<T>::resize(size_t newCap)
 {
-
 	T* temp = arr;
 	arr = new T[newCap];
 
 	for (size_t i = 0; i < size; i++)
-		arr[i] = temp[i];
+		//arr[i] = temp[i]; // UniquePointer doesn't have lvalue op=
+		arr[i] = std::move(temp[i]);
 
 	capacity = newCap;
 	delete[] temp;

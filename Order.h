@@ -14,11 +14,23 @@ enum class OrderStatus
 
 class Order
 {
+	static size_t latestId;
+
+	size_t id = 0;
 	UniquePointer<Client> client;
 	UniquePointer<Driver> driver;
-	size_t id = 0;
 	Address address;
 	unsigned passengers = 0;
 	OrderStatus orderStatus = OrderStatus::created;
+
+public:
+	Order() = default;
+	Order(const Client* client, const Driver* driver, const Address& address, unsigned passengers);
+
+	Order(const Order&) = delete;
+	Order& operator=(const Order&) = delete;
+
+	Order(Order&&) noexcept;
+	Order& operator=(Order&&) noexcept;
 };
 

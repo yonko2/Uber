@@ -2,6 +2,8 @@
 
 #include "HashingModule.h"
 
+size_t User::latestId = 1;
+
 User::User()
 {
 	this->id = latestId;
@@ -17,11 +19,6 @@ User::User(const MyString& username, const MyString& password, const MyString& f
 	this->passwordHash = HashingModule::hashString(password);
 	this->firstName = firstName;
 	this->lastName = lastName;
-}
-
-void User::logout(SessionManager* session)
-{
-	session->logout();
 }
 
 size_t User::getId() const

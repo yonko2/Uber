@@ -3,6 +3,6 @@
 
 class Client : public User
 {
-
+	//Client() = default;
 };
 
