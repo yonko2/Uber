@@ -25,6 +25,11 @@ class Driver : public User
 	DynamicArray<UniquePointer<Order>> newOrders;
 
 public:
+	Driver() = default;
+	Driver(const MyString& username, const MyString& password,
+		const MyString& firstName, const MyString& lastName,
+		const MyString& carNumber, const MyString& phoneNumber);
+
 	/*Driver(const Driver&) = delete;
 	Driver& operator=(const Driver&) = delete;
 

@@ -64,6 +64,8 @@ void UberApplication::login(const MyString& username, const MyString& password)
 			}
 		}
 	}
+
+	throw std::runtime_error("User with password not found.");
 }
 
 void UberApplication::login(MyString&& username, MyString&& password)
@@ -95,6 +97,8 @@ void UberApplication::login(MyString&& username, MyString&& password)
 			}
 		}
 	}
+
+	throw std::runtime_error("User with password not found.");
 }
 
 void UberApplication::logout()

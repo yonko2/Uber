@@ -14,6 +14,10 @@ enum class ClientActions
 
 class Client : public User
 {
-	//Client() = default;
+public:
+	Client() = default;
+
+	Client(const MyString& username, const MyString& password,
+		const MyString& firstName, const MyString& lastName);
 };
 

@@ -67,8 +67,8 @@ namespace MenuInputGetters
 
 	DriverActions getDriverAction()
 	{
-		const short MIN_SESSION_ACTION = 1;
-		const short MAX_SESSION_ACTION = 7;
+		const short MIN_DRIVER_ACTION = 1;
+		const short MAX_DRIVER_ACTION = 7;
 
 		std::cout << "Choose an option:\n1) Change address\2) Check messages\n"
 			<< "3) Accept order\n4) Decline order\n5) Finish order\n6) Accept payment\n"
@@ -76,7 +76,7 @@ namespace MenuInputGetters
 		short sessionOption = 0;
 		std::cin >> sessionOption;
 
-		while (!isInRange(sessionOption, MIN_SESSION_ACTION, MAX_SESSION_ACTION))
+		while (!isInRange(sessionOption, MIN_DRIVER_ACTION, MAX_DRIVER_ACTION))
 		{
 			std::cout << INVALID_OPTION_MESSAGE;
 			std::cin >> sessionOption;
@@ -101,11 +101,84 @@ namespace EventHandlers
 {
 	namespace SessionEvents
 	{
-		void registerUser(UberApplication* uberApplication) {
+		void registerClient(UberApplication* uberApplication) {
+			MyString username, password, firstName, lastName;
+			std::cout << "\nInput username: ";
+			std::cin >> username;
+			std::cout << "\nInput password: ";
+			std::cin >> password;
+			std::cout << "\nInput first name: ";
+			std::cin >> firstName;
+			std::cout << "\nInput last name: ";
+			std::cin >> lastName;
 
+			uberApplication->registerClient(Client{ username,password,firstName,lastName });
+			std::cout << "\nClient registered successfully\n";
 		}
-		void login(UberApplication* uberApplication) {
 
+		void registerDriver(UberApplication* uberApplication) {
+			MyString username, password, firstName, lastName, carNumber, phoneNumber;
+			std::cout << "\nInput username: ";
+			std::cin >> username;
+			std::cout << "\nInput password: ";
+			std::cin >> password;
+			std::cout << "\nInput first name: ";
+			std::cin >> firstName;
+			std::cout << "\nInput last name: ";
+			std::cin >> lastName;
+			std::cout << "\nInput car number: ";
+			std::cin >> carNumber;
+			std::cout << "\nInput phone number: ";
+			std::cin >> phoneNumber;
+
+			uberApplication->registerDriver(
+				Driver{ username,password,firstName,lastName,carNumber,phoneNumber });
+			std::cout << "\nDriver registered successfully\n";
+		}
+
+		void registerUser(UberApplication* uberApplication) {
+			const short MIN_USER_OPTION = 1;
+			const short MAX_USER_OPTION = 2;
+
+			std::cout << "Choose: 1) Client 2) Driver: ";
+			short userType = 0;
+			std::cin >> userType;
+
+			while (!isInRange(userType, MIN_USER_OPTION, MAX_USER_OPTION))
+			{
+				std::cout << INVALID_OPTION_MESSAGE;
+				std::cin >> userType;
+			}
+
+			switch (userType)
+			{
+			case 1:
+				SessionEvents::registerClient(uberApplication);
+				break;
+			case 2:
+				SessionEvents::registerDriver(uberApplication);
+				break;
+			default:
+				throw std::logic_error("Unknown command.");
+			}
+		}
+
+		void login(UberApplication* uberApplication) {
+			MyString username, password;
+			std::cout << "\nInput username: ";
+			std::cin >> username;
+			std::cout << "\nInput password: ";
+			std::cin >> password;
+
+			try
+			{
+				uberApplication->login(std::move(username), std::move(password));
+				std::cout << "Login successful.\n";
+			}
+			catch (std::runtime_error& rtex)
+			{
+				std::cout << rtex.what() << std::endl;;
+			}
 		}
 	}
 
@@ -157,7 +230,7 @@ namespace EventHandlers
 	{
 		void handleLoginOrRegisterMenu(UberApplication* uberApplication)
 		{
-			switch (SessionActions sessionActions = MenuInputGetters::getSessionAction())
+			switch (MenuInputGetters::getSessionAction())
 			{
 			case SessionActions::registerUser:
 				SessionEvents::registerUser(uberApplication);
@@ -165,6 +238,8 @@ namespace EventHandlers
 			case SessionActions::login:
 				SessionEvents::login(uberApplication);
 				break;
+			default:
+				throw std::logic_error("Unknown command.");
 			}
 		}
 
@@ -228,6 +303,8 @@ namespace EventHandlers
 				case DriverActions::acceptPayment:
 					DriverEvents::acceptPayment(uberApplication);
 					break;
+				default:
+					throw std::logic_error("Unknown command.");
 				}
 
 				driverAction = MenuInputGetters::getDriverAction();
