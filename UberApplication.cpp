@@ -25,6 +25,16 @@ const DynamicArray<Client>& UberApplication::getClients() const
 	return this->clients;
 }
 
+const UniquePointer<User>& UberApplication::getLoggedUser() const
+{
+	return this->loggedUser;
+}
+
+bool UberApplication::getIsLoggedUserClient() const
+{
+	return this->isClient;
+}
+
 void UberApplication::login(const MyString& username, const MyString& password)
 {
 	const size_t clientsCount = this->clients.getSize();

@@ -4,11 +4,24 @@
 #include "DynamicArray.hpp"
 #include "UniquePointer.hpp"
 
+enum class DriverActions
+{
+	changeAddress,
+	checkMessages,
+	acceptOrder,
+	declineOrder,
+	finishOrder,
+	acceptPayment,
+	logout
+};
+
 class Order;
 
 class Driver : public User
 {
 	double rating = 0;
+	MyString carNumber;
+	MyString phoneNumber;
 	DynamicArray<UniquePointer<Order>> newOrders;
 
 public:

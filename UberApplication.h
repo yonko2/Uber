@@ -4,6 +4,12 @@
 #include "DynamicArray.hpp"
 #include "Order.h"
 
+enum class SessionActions
+{
+	registerUser,
+	login
+};
+
 class UberApplication // singleton
 {
 	UniquePointer<User> loggedUser = nullptr;
@@ -29,5 +35,8 @@ public:
 	void logout();
 
 	const DynamicArray<Client>& getClients() const;
+
+	const UniquePointer<User>& getLoggedUser() const;
+	bool getIsLoggedUserClient() const;
 };
 
