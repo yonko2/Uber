@@ -24,3 +24,17 @@ Address::Address(const MyString& name, int coordX, int coordY, const MyString& d
 {
 	this->description = description;
 }
+
+void Address::saveToFile(std::ofstream& ofs) const
+{
+	name.saveToFile(ofs);
+	coordinates.saveToFile(ofs);
+	description.saveToFile(ofs);
+}
+
+void Address::readFromFile(std::ifstream& ifs)
+{
+	name.readFromFile(ifs);
+	coordinates.readFromFile(ifs);
+	description.readFromFile(ifs);
+}

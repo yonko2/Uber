@@ -14,10 +14,10 @@ namespace MenuInputGetters
 	ClientActions getClientAction()
 	{
 		const short MIN_CLIENT_ACTION = 1;
-		const short MAX_CLIENT_ACTION = 7;
+		const short MAX_CLIENT_ACTION = 8;
 
 		std::cout << "Choose an option:\n1) Make order\n2) Check order3) Cancel order\n"
-			<< "4) Pay\n5) Rate\n6) Add money\n7) Logout";
+			<< "4) Pay\n5) Rate\n6) Add money\n7) Logout\n8) Exit";
 		short clientOption = 0;
 		std::cin >> clientOption;
 
@@ -36,6 +36,7 @@ namespace MenuInputGetters
 		case 5: return ClientActions::rate;
 		case 6: return ClientActions::add_money;
 		case 7: return ClientActions::logout;
+		case 8: return ClientActions::exit;
 		default:
 			throw std::logic_error("Unknown command.");
 		}
@@ -44,9 +45,9 @@ namespace MenuInputGetters
 	SessionActions getSessionAction()
 	{
 		const short MIN_SESSION_ACTION = 1;
-		const short MAX_SESSION_ACTION = 2;
+		const short MAX_SESSION_ACTION = 3;
 
-		std::cout << "Choose an option:\n1) Register user\2) Login\n";
+		std::cout << "Choose an option:\n1) Register user\n2) Login\n3) Exit\n";
 		short sessionOption = 0;
 		std::cin >> sessionOption;
 
@@ -60,6 +61,7 @@ namespace MenuInputGetters
 		{
 		case 1: return SessionActions::registerUser;
 		case 2: return SessionActions::login;
+		case 3: return SessionActions::exit;
 		default:
 			throw std::logic_error("Unknown command.");
 		}
@@ -72,7 +74,7 @@ namespace MenuInputGetters
 
 		std::cout << "Choose an option:\n1) Change address\2) Check messages\n"
 			<< "3) Accept order\n4) Decline order\n5) Finish order\n6) Accept payment\n"
-			<< "7) Logout\n";
+			<< "7) Logout\n8) Exit\n";
 		short sessionOption = 0;
 		std::cin >> sessionOption;
 
@@ -91,6 +93,7 @@ namespace MenuInputGetters
 		case 5:return DriverActions::finishOrder;
 		case 6:return DriverActions::acceptPayment;
 		case 7:return DriverActions::logout;
+		case 8:return DriverActions::exit;
 		default:
 			throw std::logic_error("Unknown command.");
 		}
@@ -99,6 +102,12 @@ namespace MenuInputGetters
 
 namespace EventHandlers
 {
+	void exitApplication(UberApplication* uberApplication)
+	{
+		uberApplication->save();
+		exit(EXIT_SUCCESS);
+	}
+
 	namespace SessionEvents
 	{
 		void registerClient(UberApplication* uberApplication) {
@@ -177,7 +186,7 @@ namespace EventHandlers
 			}
 			catch (std::runtime_error& rtex)
 			{
-				std::cout << rtex.what() << std::endl;;
+				std::cout << rtex.what() << std::endl;
 			}
 		}
 	}
@@ -237,6 +246,8 @@ namespace EventHandlers
 				break;
 			case SessionActions::login:
 				SessionEvents::login(uberApplication);
+				break;
+			case SessionActions::exit:
 				break;
 			default:
 				throw std::logic_error("Unknown command.");
@@ -318,6 +329,8 @@ namespace EventHandlers
 int main()
 {
 	UberApplication uberApplication;
+	uberApplication.load();
+
 	if (uberApplication.getLoggedUser().operator->() == nullptr)
 	{
 		EventHandlers::MainMenuEvents::handleLoginOrRegisterMenu(&uberApplication);

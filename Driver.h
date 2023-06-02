@@ -12,17 +12,16 @@ enum class DriverActions
 	declineOrder,
 	finishOrder,
 	acceptPayment,
-	logout
+	logout,
+	exit
 };
-
-class Order;
 
 class Driver : public User
 {
 	double rating = 0;
 	MyString carNumber;
 	MyString phoneNumber;
-	DynamicArray<UniquePointer<Order>> newOrders;
+	DynamicArray<size_t> newOrderIDs;
 
 public:
 	Driver() = default;
@@ -30,10 +29,7 @@ public:
 		const MyString& firstName, const MyString& lastName,
 		const MyString& carNumber, const MyString& phoneNumber);
 
-	/*Driver(const Driver&) = delete;
-	Driver& operator=(const Driver&) = delete;
-
-	Driver(Driver&&) = default;
-	Driver& operator=(Driver&&) = default;*/
+	void saveToFile(std::ofstream& ofs) const;
+	void readFromFile(std::ifstream& ifs);
 };
 

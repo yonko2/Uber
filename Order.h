@@ -27,10 +27,15 @@ public:
 	Order() = default;
 	Order(const Client* client, const Driver* driver, const Address& address, unsigned passengers);
 
-	Order(const Order&) = delete;
+	size_t getId() const;
+
+	void saveToFile(std::ofstream& ofs) const;
+	void readFromFile(DynamicArray<Client>* clientsPtr, DynamicArray<Driver>* driversPtr, std::ifstream& ifs);
+
+	/*Order(const Order&) = delete;
 	Order& operator=(const Order&) = delete;
 
 	Order(Order&&) noexcept;
-	Order& operator=(Order&&) noexcept;
+	Order& operator=(Order&&) noexcept;*/
 };
 

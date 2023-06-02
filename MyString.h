@@ -1,5 +1,6 @@
 #pragma once
 #include <iostream>
+#include <fstream>
 
 /**
  * @source https://github.com/Angeld55/Object-oriented_programming_FMI/tree/master/Week%2009/MyString%20(with%20move)
@@ -38,6 +39,9 @@ public:
 
 	friend MyString operator+(const MyString& lhs, const MyString& rhs);
 	friend std::istream& operator>>(std::istream&, MyString& str);
+
+	void saveToFile(std::ofstream& ofs) const;
+	void readFromFile(std::ifstream& ifs);
 };
 
 std::ostream& operator<<(std::ostream& os, const MyString& str);

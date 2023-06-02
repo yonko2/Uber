@@ -20,6 +20,16 @@ void UberApplication::registerDriver(Driver&& driver)
 	this->drivers.pushBack(std::move(driver));
 }
 
+void UberApplication::load()
+{
+
+}
+
+void UberApplication::save() const
+{
+	
+}
+
 const DynamicArray<Client>& UberApplication::getClients() const
 {
 	return this->clients;

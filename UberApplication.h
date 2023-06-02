@@ -7,7 +7,8 @@
 enum class SessionActions
 {
 	registerUser,
-	login
+	login,
+	exit
 };
 
 class UberApplication // singleton
@@ -27,7 +28,7 @@ public:
 	void registerClient(Client&& client);
 	void registerDriver(Driver&& driver);
 
-	void load() const;
+	void load();
 	void save() const;
 
 	void login(const MyString& username, const MyString& password);

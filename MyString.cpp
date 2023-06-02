@@ -1,4 +1,5 @@
 #include "MyString.h"
+#include <fstream>
 #pragma warning(disable:4996)
 
 MyString::MyString(size_t capacity)
@@ -154,6 +155,20 @@ MyString MyString::substr(size_t begin, size_t howMany) const
 const char* MyString::c_str() const
 {
 	return _data;
+}
+
+void MyString::saveToFile(std::ofstream& ofs) const
+{
+	ofs.write((const char*)&this->_length, sizeof(this->_length));
+	ofs.write(this->c_str(), this->_length + 1);
+}
+
+void MyString::readFromFile(std::ifstream& ifs)
+{
+	free();
+	ifs.read((char*)&this->_length, sizeof(this->_length));
+	this->_data = new char[_length + 1]{};
+	ifs.read(this->_data, this->_length + 1);
 }
 
 std::ostream& operator<<(std::ostream& os, const MyString& str)

@@ -4,3 +4,13 @@ Client::Client(const MyString& username, const MyString& password, const MyStrin
 User(username,password,firstName,lastName)
 {
 }
+
+void Client::saveToFile(std::ofstream& ofs) const
+{
+	User::saveToFile(ofs);
+}
+
+void Client::readFromFile(std::ifstream& ifs)
+{
+	User::readFromFile(ifs);
+}

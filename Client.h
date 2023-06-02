@@ -9,7 +9,8 @@ enum class ClientActions
 	pay,
 	rate,
 	add_money,
-	logout
+	logout,
+	exit
 };
 
 class Client : public User
@@ -19,5 +20,8 @@ public:
 
 	Client(const MyString& username, const MyString& password,
 		const MyString& firstName, const MyString& lastName);
+
+	void saveToFile(std::ofstream& ofs) const;
+	void readFromFile(std::ifstream& ifs);
 };
 

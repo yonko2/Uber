@@ -50,3 +50,23 @@ bool User::comparePassword(const MyString& password) const
 {
 	return HashingModule::hashString(password) == this->passwordHash;
 }
+
+void User::saveToFile(std::ofstream& ofs) const
+{
+	ofs.write((const char*)&id, sizeof id);
+	username.saveToFile(ofs);
+	ofs.write((const char*)&passwordHash, sizeof passwordHash);
+	firstName.saveToFile(ofs);
+	lastName.saveToFile(ofs);
+	ofs.write((const char*)&balance, sizeof balance);
+}
+
+void User::readFromFile(std::ifstream& ifs)
+{
+	ifs.read((char*)&id, sizeof id);
+	username.readFromFile(ifs);
+	ifs.read((char*)&passwordHash, sizeof passwordHash);
+	firstName.readFromFile(ifs);
+	lastName.readFromFile(ifs);
+	ifs.read((char*)&balance, sizeof balance);
+}
