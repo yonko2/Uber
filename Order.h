@@ -25,7 +25,7 @@ class Order
 
 public:
 	Order() = default;
-	Order(const Client* client, const Driver* driver, const Address& address, unsigned passengers);
+	Order(Client* client, Driver* driver, const Address& address, unsigned passengers);
 
 	size_t getId() const;
 

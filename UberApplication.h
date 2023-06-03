@@ -20,6 +20,16 @@ class UberApplication // singleton
 	DynamicArray<Driver> drivers;
 	DynamicArray<Order> orders;
 
+	void saveSession() const;
+	void saveClients() const;
+	void saveDrivers() const;
+	void saveOrders() const;
+
+	void loadSession();
+	void loadClients();
+	void loadDrivers();
+	void loadOrders();
+
 public:
 	UberApplication() = default;
 	UberApplication(const UberApplication& other) = delete; // because of UniquePointer

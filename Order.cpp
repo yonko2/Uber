@@ -4,6 +4,14 @@
 
 size_t Order::latestId = 1;
 
+Order::Order(Client* client, Driver* driver, const Address& address, unsigned passengers)
+{
+	this->client = UniquePointer<Client>{ client };
+	this->driver = UniquePointer<Driver>{ driver };
+	this->address = address;
+	this->passengers = passengers;
+}
+
 size_t Order::getId() const
 {
 	return this->id;
