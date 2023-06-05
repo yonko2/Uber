@@ -91,3 +91,11 @@ void User::readFromFile(std::ifstream& ifs)
 	lastName.readFromFile(ifs);
 	ifs.read((char*)&balance, sizeof balance);
 }
+
+void User::print() const
+{
+	std::cout << "Username: " << username << '\n'
+		<< "First name: " << firstName << '\n'
+		<< "Last name: " << lastName << '\n';
+		//<< "Balance: " << balance << std::endl;
+}

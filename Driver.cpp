@@ -48,3 +48,11 @@ void Driver::readFromFile(std::ifstream& ifs)
 		this->newOrderIDs.pushBack(currId);
 	}
 }
+
+void Driver::print() const
+{
+	User::print();
+	std::cout << "Rating: " << rating << '\n'
+		<< "Car number: " << carNumber << '\n'
+		<< "Phone number: " << phoneNumber << std::endl;
+}

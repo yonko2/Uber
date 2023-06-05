@@ -12,6 +12,18 @@ enum class OrderStatus
 	canceled
 };
 
+const char* OrderStatusToString(OrderStatus e)
+{
+	switch (e)
+	{
+	case OrderStatus::created: return "created";
+	case OrderStatus::accepted: return "accepted";
+	case OrderStatus::completed: return "completed";
+	case OrderStatus::canceled: return "canceled";
+	default: return "unknown";
+	}
+}
+
 class Order
 {
 	static size_t latestId;
@@ -36,6 +48,8 @@ public:
 
 	void saveToFile(std::ofstream& ofs) const;
 	void readFromFile(DynamicArray<Client>* clientsPtr, DynamicArray<Driver>* driversPtr, std::ifstream& ifs);
+
+	void print() const;
 
 	/*Order(const Order&) = delete;
 	Order& operator=(const Order&) = delete;

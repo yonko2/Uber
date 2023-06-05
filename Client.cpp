@@ -19,3 +19,8 @@ void Client::readFromFile(std::ifstream& ifs)
 {
 	User::readFromFile(ifs);
 }
+
+void Client::print() const
+{
+	User::print();
+}

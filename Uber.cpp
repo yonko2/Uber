@@ -233,6 +233,7 @@ namespace EventHandlers
 
 			std::cout << "Input address name: ";
 			std::cin >> addressName;
+			std::cout << "Input address coordinates: ";
 			std::cin >> coordXAddress;
 			std::cin >> coordYAddress;
 			std::cout << "Input address description (Press Enter for none): ";
@@ -272,7 +273,32 @@ namespace EventHandlers
 			uberApplication->addOrder(std::move(order));
 		}
 		void checkOrder(UberApplication* uberApplication) {
+			try
+			{
+				size_t orderId = 0;
+				std::cout << "Input order ID: ";
+				std::cin >> orderId;
 
+				const DynamicArray<Order>* ordersPtr = &uberApplication->getOrders();
+				bool orderFound = false;
+				for (size_t i = 0; i < ordersPtr->getSize(); i++)
+				{
+					if (ordersPtr->operator[](i).getId() == orderId)
+					{
+						ordersPtr->operator[](i).print();
+						orderFound = true;
+						break;
+					}
+				}
+				if (!orderFound)
+				{
+					throw std::runtime_error("ID not found");
+				}
+			}
+			catch (std::runtime_error& rex)
+			{
+				std::cout << rex.what() << std::endl;
+			}
 		}
 		void cancelOrder(UberApplication* uberApplication) {
 

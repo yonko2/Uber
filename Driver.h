@@ -2,7 +2,6 @@
 
 #include "User.h"
 #include "DynamicArray.hpp"
-#include "UniquePointer.hpp"
 
 enum class DriverActions
 {
@@ -32,7 +31,8 @@ public:
 		MyString&& firstName, MyString&& lastName,
 		MyString&& carNumber, MyString&& phoneNumber);
 
-	void saveToFile(std::ofstream& ofs) const;
-	void readFromFile(std::ifstream& ifs);
+	void saveToFile(std::ofstream& ofs) const override;
+	void readFromFile(std::ifstream& ifs) override;
+	void print() const override;
 };
 

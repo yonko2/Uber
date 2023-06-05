@@ -20,5 +20,6 @@ struct Address
 
 	void saveToFile(std::ofstream& ofs) const;
 	void readFromFile(std::ifstream& ifs);
+	void print() const;
 };
 

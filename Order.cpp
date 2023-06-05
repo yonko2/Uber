@@ -39,7 +39,7 @@ size_t Order::getId() const
 
 void Order::saveToFile(std::ofstream& ofs) const
 {
-	if (client.operator->() == nullptr || driver.operator->()==nullptr)
+	if (client.operator->() == nullptr || driver.operator->() == nullptr)
 	{
 		throw std::exception("Empty order");
 	}
@@ -53,8 +53,8 @@ void Order::saveToFile(std::ofstream& ofs) const
 	ofs.write((const char*)&driverId, sizeof driverId);
 
 	address.saveToFile(ofs);
-	ofs.write((const char*)&passengers,sizeof passengers);
-	ofs.write((const char*)&orderStatus,sizeof orderStatus);
+	ofs.write((const char*)&passengers, sizeof passengers);
+	ofs.write((const char*)&orderStatus, sizeof orderStatus);
 }
 
 void Order::readFromFile(DynamicArray<Client>* clientsPtr, DynamicArray<Driver>* driversPtr, std::ifstream& ifs)
@@ -66,7 +66,7 @@ void Order::readFromFile(DynamicArray<Client>* clientsPtr, DynamicArray<Driver>*
 	const size_t clientsCount = clientsPtr->getSize();
 	for (size_t i = 0; i < clientsCount; i++)
 	{
-		if ((*clientsPtr)[i].getId()==clientId)
+		if ((*clientsPtr)[i].getId() == clientId)
 		{
 			this->client = UniquePointer<Client>{ &(*clientsPtr)[i] };
 		}
@@ -86,4 +86,14 @@ void Order::readFromFile(DynamicArray<Client>* clientsPtr, DynamicArray<Driver>*
 	address.readFromFile(ifs);
 	ifs.read((char*)&passengers, sizeof passengers);
 	ifs.read((char*)&orderStatus, sizeof orderStatus);
+}
+
+void Order::print() const
+{
+	std::cout << "Order status: " << OrderStatusToString(this->orderStatus) << '\n';
+
+	if (this->driver.operator->()!=nullptr)
+	{
+		this->driver->print();
+	}
 }

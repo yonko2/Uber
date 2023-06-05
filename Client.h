@@ -23,7 +23,8 @@ public:
 	Client(MyString&& username, MyString&& password,
 		MyString&& firstName, MyString&& lastName);
 
-	void saveToFile(std::ofstream& ofs) const;
-	void readFromFile(std::ifstream& ifs);
+	void saveToFile(std::ofstream& ofs) const override;
+	void readFromFile(std::ifstream& ifs) override;
+	void print() const override;
 };
 

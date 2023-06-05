@@ -36,8 +36,8 @@ Address::Address(MyString&& name, int coordX, int coordY) :
 {
 }
 
-Address::Address(MyString&& name, int coordX, int coordY, MyString&& description):
-Address(std::move(name),coordX,coordY)
+Address::Address(MyString&& name, int coordX, int coordY, MyString&& description) :
+	Address(std::move(name), coordX, coordY)
 {
 	this->description = std::move(description);
 }
@@ -60,4 +60,11 @@ void Address::readFromFile(std::ifstream& ifs)
 	name.readFromFile(ifs);
 	coordinates.readFromFile(ifs);
 	description.readFromFile(ifs);
+}
+
+void Address::print() const
+{
+	std::cout << "Address: " << name << ' '
+		<< coordinates.getFirst() << ' ' << coordinates.getSecond()
+		<< description << std::endl;
 }

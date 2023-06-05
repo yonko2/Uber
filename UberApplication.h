@@ -48,6 +48,8 @@ public:
 	void logout();
 
 	const DynamicArray<Client>& getClients() const;
+	const DynamicArray<Driver>& getDrivers() const;
+	const DynamicArray<Order>& getOrders() const;
 
 	const UniquePointer<User>& getLoggedUser() const;
 	UniquePointer<User>& getLoggedUser();

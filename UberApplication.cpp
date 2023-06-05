@@ -246,6 +246,16 @@ const DynamicArray<Client>& UberApplication::getClients() const
 	return this->clients;
 }
 
+const DynamicArray<Driver>& UberApplication::getDrivers() const
+{
+	return this->drivers;
+}
+
+const DynamicArray<Order>& UberApplication::getOrder() const
+{
+	return this->orders;
+}
+
 const UniquePointer<User>& UberApplication::getLoggedUser() const
 {
 	return this->loggedUser;

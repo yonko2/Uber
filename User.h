@@ -34,6 +34,7 @@ public:
 
 	virtual void saveToFile(std::ofstream& ofs) const;
 	virtual void readFromFile(std::ifstream& ifs);
+	virtual void print() const;
 
 	virtual ~User() = default;
 };
