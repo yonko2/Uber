@@ -9,6 +9,14 @@ Driver::Driver(const MyString& username, const MyString& password, const MyStrin
 	this->phoneNumber = phoneNumber;
 }
 
+Driver::Driver(MyString&& username, MyString&& password, MyString&& firstName, MyString&& lastName,
+	MyString&& carNumber, MyString&& phoneNumber) :
+	User(std::move(username), std::move(password), std::move(firstName), std::move(lastName))
+{
+	this->carNumber = std::move(carNumber);
+	this->phoneNumber = std::move(phoneNumber);
+}
+
 void Driver::saveToFile(std::ofstream& ofs) const
 {
 	User::saveToFile(ofs);

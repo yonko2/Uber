@@ -20,6 +20,8 @@ public:
 
 	Client(const MyString& username, const MyString& password,
 		const MyString& firstName, const MyString& lastName);
+	Client(MyString&& username, MyString&& password,
+		MyString&& firstName, MyString&& lastName);
 
 	void saveToFile(std::ofstream& ofs) const;
 	void readFromFile(std::ifstream& ifs);

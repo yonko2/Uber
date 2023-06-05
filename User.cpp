@@ -21,6 +21,17 @@ User::User(const MyString& username, const MyString& password, const MyString& f
 	this->lastName = lastName;
 }
 
+User::User(MyString&& username, MyString&& password, MyString&& firstName, MyString&& lastName)
+{
+	this->id = latestId;
+	latestId++;
+
+	this->username = std::move(username);
+	this->passwordHash = HashingModule::hashString(std::move(password));
+	this->firstName = std::move(firstName);
+	this->lastName = std::move(lastName);
+}
+
 size_t User::getLatestId()
 {
 	return User::latestId;

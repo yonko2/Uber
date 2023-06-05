@@ -17,6 +17,8 @@ protected:
 	User();
 	User(const MyString& username, const MyString& password,
 		const MyString& firstName, const MyString& lastName);
+	User(MyString&& username, MyString&& password,
+		MyString&& firstName, MyString&& lastName);
 
 public:
 	static size_t getLatestId();

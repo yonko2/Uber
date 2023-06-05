@@ -28,6 +28,9 @@ public:
 	Driver(const MyString& username, const MyString& password,
 		const MyString& firstName, const MyString& lastName,
 		const MyString& carNumber, const MyString& phoneNumber);
+	Driver(MyString&& username, MyString&& password,
+		MyString&& firstName, MyString&& lastName,
+		MyString&& carNumber, MyString&& phoneNumber);
 
 	void saveToFile(std::ofstream& ofs) const;
 	void readFromFile(std::ifstream& ifs);
