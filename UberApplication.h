@@ -63,5 +63,6 @@ public:
 	void addOrder(Order&& order);
 
 	void removeOrder(size_t orderId);
+	void cancelOrder(size_t orderId);
 };
 

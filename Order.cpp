@@ -37,6 +37,11 @@ size_t Order::getId() const
 	return this->id;
 }
 
+void Order::setOrderStatus(const OrderStatus orderStatus)
+{
+	this->orderStatus = orderStatus;
+}
+
 void Order::saveToFile(std::ofstream& ofs) const
 {
 	if (client.operator->() == nullptr || driver.operator->() == nullptr)
@@ -96,4 +101,9 @@ void Order::print() const
 	{
 		this->driver->print();
 	}
+}
+
+void Order::setDriver(UniquePointer<Driver>&& driverPtr)
+{
+	this->driver = std::move(driverPtr);
 }

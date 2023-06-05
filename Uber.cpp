@@ -307,7 +307,8 @@ namespace EventHandlers
 				std::cout << "Input order ID: ";
 				std::cin >> orderId;
 
-				uberApplication->removeOrder(orderId);
+				//uberApplication->removeOrder(orderId);
+				uberApplication->cancelOrder(orderId);
 			}
 			catch (std::runtime_error& rex)
 			{

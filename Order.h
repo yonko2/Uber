@@ -46,10 +46,13 @@ public:
 
 	size_t getId() const;
 
+	void setOrderStatus(OrderStatus orderStatus);
+
 	void saveToFile(std::ofstream& ofs) const;
 	void readFromFile(DynamicArray<Client>* clientsPtr, DynamicArray<Driver>* driversPtr, std::ifstream& ifs);
 
 	void print() const;
+	void setDriver(UniquePointer<Driver>&& driverPtr);
 
 	/*Order(const Order&) = delete;
 	Order& operator=(const Order&) = delete;

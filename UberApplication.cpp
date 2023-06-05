@@ -315,6 +315,21 @@ void UberApplication::removeOrder(const size_t orderId)
 	throw std::runtime_error("Order ID not found.");
 }
 
+void UberApplication::cancelOrder(const size_t orderId)
+{
+	const size_t ordersCount = this->orders.getSize();
+	for (size_t i = 0; i < ordersCount; i++)
+	{
+		if (this->orders[i].getId() == orderId)
+		{
+			this->orders[i].setDriver(UniquePointer{ nullptr });
+			this->orders[i].setOrderStatus(OrderStatus::canceled);
+			return;
+		}
+	}
+	throw std::runtime_error("Order ID not found.");
+}
+
 void UberApplication::login(const MyString& username, const MyString& password)
 {
 	const size_t clientsCount = this->clients.getSize();
