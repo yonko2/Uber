@@ -61,5 +61,7 @@ public:
 	void addDriver(Driver&& driver);
 	void addOrder(const Order& order);
 	void addOrder(Order&& order);
+
+	void removeOrder(size_t orderId);
 };
 

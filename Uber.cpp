@@ -301,7 +301,18 @@ namespace EventHandlers
 			}
 		}
 		void cancelOrder(UberApplication* uberApplication) {
+			try
+			{
+				size_t orderId = 0;
+				std::cout << "Input order ID: ";
+				std::cin >> orderId;
 
+				uberApplication->removeOrder(orderId);
+			}
+			catch (std::runtime_error& rex)
+			{
+				std::cout << rex.what() << std::endl;
+			}
 		}
 		void pay(UberApplication* uberApplication) {
 

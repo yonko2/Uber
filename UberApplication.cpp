@@ -251,7 +251,7 @@ const DynamicArray<Driver>& UberApplication::getDrivers() const
 	return this->drivers;
 }
 
-const DynamicArray<Order>& UberApplication::getOrder() const
+const DynamicArray<Order>& UberApplication::getOrders() const
 {
 	return this->orders;
 }
@@ -299,6 +299,20 @@ void UberApplication::addOrder(const Order& order)
 void UberApplication::addOrder(Order&& order)
 {
 	this->orders.pushBack(std::move(order));
+}
+
+void UberApplication::removeOrder(const size_t orderId)
+{
+	const size_t ordersCount = this->orders.getSize();
+	for (size_t i = 0; i < ordersCount; i++)
+	{
+		if (this->orders[i].getId() == orderId)
+		{
+			this->orders.removeAt(i);
+			return;
+		}
+	}
+	throw std::runtime_error("Order ID not found.");
 }
 
 void UberApplication::login(const MyString& username, const MyString& password)
