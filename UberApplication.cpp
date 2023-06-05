@@ -28,6 +28,9 @@ void UberApplication::saveClients() const
 		throw std::exception("File not open.");
 	}
 
+	const size_t latestId = Client::getLatestId();
+	clientsFile.write((const char*)&latestId, sizeof latestId);
+
 	const size_t clientsCount = this->clients.getSize();
 	clientsFile.write((const char*)&clientsCount, sizeof clientsCount);
 
@@ -65,6 +68,9 @@ void UberApplication::saveOrders() const
 	{
 		throw std::exception("File not open.");
 	}
+
+	const size_t latestId = Order::getLatestId();
+	ordersFile.write((const char*)&latestId, sizeof latestId);
 
 	const size_t ordersCount = this->orders.getSize();
 	ordersFile.write((const char*)&ordersCount, sizeof ordersCount);
@@ -122,6 +128,10 @@ void UberApplication::loadClients()
 		throw std::exception("File not open.");
 	}
 
+	size_t latestId = 0;
+	clientsFile.read((char*)&latestId, sizeof latestId);
+	User::setLatestId(latestId);
+
 	size_t clientsCount = 0;
 	clientsFile.read((char*)&clientsCount, sizeof clientsCount);
 
@@ -164,6 +174,10 @@ void UberApplication::loadOrders()
 		throw std::exception("File not open.");
 	}
 
+	size_t latestId = 0;
+	ordersFile.read((char*)&latestId, sizeof latestId);
+	Order::setLatestId(latestId);
+
 	size_t ordersCount = 0;
 	ordersFile.read((char*)&ordersCount, sizeof ordersCount);
 
@@ -175,6 +189,16 @@ void UberApplication::loadOrders()
 	}
 
 	ordersFile.close();
+}
+
+bool UberApplication::checkBinariesAvailability()
+{
+	std::ifstream check("session.dat", std::ios::in | std::ios::binary | std::ios::_Nocreate);
+
+	const bool toReturn = check.is_open();
+	check.close();
+
+	return toReturn;
 }
 
 void UberApplication::registerClient(Client&& client)
@@ -194,6 +218,9 @@ void UberApplication::registerDriver(Driver&& driver)
 
 void UberApplication::load()
 {
+	// Don't load files if they're missing
+	if (!checkBinariesAvailability()) return;
+
 	loadSession();
 	loadClients();
 	loadDrivers();

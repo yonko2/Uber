@@ -30,6 +30,8 @@ class UberApplication // singleton
 	void loadDrivers();
 	void loadOrders();
 
+	static bool checkBinariesAvailability();
+
 public:
 	UberApplication() = default;
 	UberApplication(const UberApplication& other) = delete; // because of UniquePointer

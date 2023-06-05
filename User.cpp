@@ -21,6 +21,16 @@ User::User(const MyString& username, const MyString& password, const MyString& f
 	this->lastName = lastName;
 }
 
+size_t User::getLatestId()
+{
+	return User::latestId;
+}
+
+void User::setLatestId(const size_t latestId)
+{
+	User::latestId = latestId;
+}
+
 size_t User::getId() const
 {
 	return this->id;

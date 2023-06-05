@@ -19,6 +19,9 @@ protected:
 		const MyString& firstName, const MyString& lastName);
 
 public:
+	static size_t getLatestId();
+	static void setLatestId(size_t latestId);
+
 	size_t getId() const;
 	const MyString& getUsername() const;
 	const MyString& getFirstName() const;

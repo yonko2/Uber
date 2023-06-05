@@ -27,6 +27,9 @@ public:
 	Order() = default;
 	Order(Client* client, Driver* driver, const Address& address, unsigned passengers);
 
+	static size_t getLatestId();
+	static void setLatestId(size_t latestId);
+
 	size_t getId() const;
 
 	void saveToFile(std::ofstream& ofs) const;

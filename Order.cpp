@@ -12,6 +12,16 @@ Order::Order(Client* client, Driver* driver, const Address& address, unsigned pa
 	this->passengers = passengers;
 }
 
+size_t Order::getLatestId()
+{
+	return Order::latestId;
+}
+
+void Order::setLatestId(const size_t latestId)
+{
+	Order::latestId = latestId;
+}
+
 size_t Order::getId() const
 {
 	return this->id;
