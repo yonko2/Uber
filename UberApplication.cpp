@@ -1,10 +1,5 @@
 #include "UberApplication.h"
 
-//void UberApplication::registerClient(const Client& client)
-//{
-//	this->clients.pushBack(client);
-//}
-
 void UberApplication::saveSession() const
 {
 	std::ofstream session("session.dat", std::ios::out | std::ios::binary);
@@ -203,16 +198,27 @@ bool UberApplication::checkBinariesAvailability()
 
 void UberApplication::registerClient(Client&& client)
 {
+	const size_t clientsCount = this->clients.getSize();
+	for (size_t i = 0; i < clientsCount; i++)
+	{
+		if (this->clients[i].getUsername() == client.getUsername())
+		{
+			throw std::runtime_error("Username already exists.");
+		}
+	}
 	this->clients.pushBack(std::move(client));
 }
 
-//void UberApplication::registerDriver(const Driver& driver)
-//{
-//	this->drivers.pushBack(driver);
-//}
-
 void UberApplication::registerDriver(Driver&& driver)
 {
+	const size_t driversCount = this->drivers.getSize();
+	for (size_t i = 0; i < driversCount; i++)
+	{
+		if (this->drivers[i].getUsername() == driver.getUsername())
+		{
+			throw std::runtime_error("Username already exists.");
+		}
+	}
 	this->drivers.pushBack(std::move(driver));
 }
 
@@ -245,9 +251,44 @@ const UniquePointer<User>& UberApplication::getLoggedUser() const
 	return this->loggedUser;
 }
 
+UniquePointer<User>& UberApplication::getLoggedUser()
+{
+	return this->loggedUser;
+}
+
 bool UberApplication::getIsLoggedUserClient() const
 {
 	return this->isClient;
+}
+
+void UberApplication::addClient(const Client& client)
+{
+	this->clients.pushBack(client);
+}
+
+void UberApplication::addClient(Client&& client)
+{
+	this->clients.pushBack(std::move(client));
+}
+
+void UberApplication::addDriver(const Driver& driver)
+{
+	this->drivers.pushBack(driver);
+}
+
+void UberApplication::addDriver(Driver&& driver)
+{
+	this->drivers.pushBack(std::move(driver));
+}
+
+void UberApplication::addOrder(const Order& order)
+{
+	this->orders.pushBack(order);
+}
+
+void UberApplication::addOrder(Order&& order)
+{
+	this->orders.pushBack(std::move(order));
 }
 
 void UberApplication::login(const MyString& username, const MyString& password)
@@ -286,24 +327,33 @@ void UberApplication::login(const MyString& username, const MyString& password)
 void UberApplication::login(MyString&& username, MyString&& password)
 {
 	const size_t clientsCount = this->clients.getSize();
+	const size_t driversCount = this->drivers.getSize();
+
+	if (clientsCount == 0 && driversCount == 0)
+	{
+		throw std::logic_error("No users available for login - register first.");
+	}
+
+	bool usernameFound = false;
 	for (size_t i = 0; i < clientsCount; i++)
 	{
 		if (this->clients[i].getUsername() == username)
 		{
+			usernameFound = true;
 			if (this->clients[i].comparePassword(password))
 			{
-				this->loggedUser = UniquePointer<User>{ &this->clients[i] };
+				this->loggedUser = UniquePointer<User>{ dynamic_cast<User*>(& this->clients[i])};
 				this->isClient = true;
 				return;
 			}
 		}
 	}
 
-	const size_t driversCount = this->drivers.getSize();
 	for (size_t i = 0; i < driversCount; i++)
 	{
 		if (this->drivers[i].getUsername() == username)
 		{
+			usernameFound = true;
 			if (this->drivers[i].comparePassword(password))
 			{
 				this->loggedUser = UniquePointer<User>{ &this->drivers[i] };
@@ -313,6 +363,10 @@ void UberApplication::login(MyString&& username, MyString&& password)
 		}
 	}
 
+	if (usernameFound)
+	{
+		throw std::runtime_error("User with username not found.");
+	}
 	throw std::runtime_error("User with password not found.");
 }
 

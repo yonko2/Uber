@@ -32,7 +32,9 @@ public:
 
 	bool comparePassword(const MyString& password) const;
 
-	void saveToFile(std::ofstream& ofs) const;
-	void readFromFile(std::ifstream& ifs);
+	virtual void saveToFile(std::ofstream& ofs) const;
+	virtual void readFromFile(std::ifstream& ifs);
+
+	virtual ~User() = default;
 };
 

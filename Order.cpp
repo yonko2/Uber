@@ -4,19 +4,21 @@
 
 size_t Order::latestId = 1;
 
-Order::Order(Client* client, Driver* driver, const Address& address, unsigned passengers)
+Order::Order(Client* client, Driver* driver, const Address& address, const Address& destination, const unsigned passengers)
 {
 	this->client = UniquePointer<Client>{ client };
 	this->driver = UniquePointer<Driver>{ driver };
 	this->address = address;
+	this->destination = destination;
 	this->passengers = passengers;
 }
 
-Order::Order(Client* client, Driver* driver, Address&& address, unsigned passengers)
+Order::Order(Client* client, Driver* driver, Address&& address, Address&& destination, const unsigned passengers)
 {
 	this->client = UniquePointer<Client>{ client };
 	this->driver = UniquePointer<Driver>{ driver };
 	this->address = std::move(address);
+	this->destination = std::move(destination);
 	this->passengers = passengers;
 }
 

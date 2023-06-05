@@ -50,6 +50,14 @@ public:
 	const DynamicArray<Client>& getClients() const;
 
 	const UniquePointer<User>& getLoggedUser() const;
+	UniquePointer<User>& getLoggedUser();
 	bool getIsLoggedUserClient() const;
+
+	void addClient(const Client& client);
+	void addClient(Client&& client);
+	void addDriver(const Driver& driver);
+	void addDriver(Driver&& driver);
+	void addOrder(const Order& order);
+	void addOrder(Order&& order);
 };
 

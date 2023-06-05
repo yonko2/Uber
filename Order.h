@@ -20,13 +20,14 @@ class Order
 	UniquePointer<Client> client;
 	UniquePointer<Driver> driver;
 	Address address;
+	Address destination;
 	unsigned passengers = 0;
 	OrderStatus orderStatus = OrderStatus::created;
 
 public:
 	Order() = default;
-	Order(Client* client, Driver* driver, const Address& address, unsigned passengers);
-	Order(Client* client, Driver* driver, Address&& address, unsigned passengers);
+	Order(Client* client, Driver* driver, const Address& address, const Address& destination, unsigned passengers);
+	Order(Client* client, Driver* driver, Address&& address, Address&& destination, unsigned passengers);
 
 	static size_t getLatestId();
 	static void setLatestId(size_t latestId);

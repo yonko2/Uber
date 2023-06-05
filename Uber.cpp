@@ -111,37 +111,62 @@ namespace EventHandlers
 	namespace SessionEvents
 	{
 		void registerClient(UberApplication* uberApplication) {
-			MyString username, password, firstName, lastName;
-			std::cout << "\nInput username: ";
-			std::cin >> username;
-			std::cout << "\nInput password: ";
-			std::cin >> password;
-			std::cout << "\nInput first name: ";
-			std::cin >> firstName;
-			std::cout << "\nInput last name: ";
-			std::cin >> lastName;
+			do
+			{
+				try
+				{
+					MyString username, password, firstName, lastName;
+					std::cout << "Input username: ";
+					std::cin >> username;
+					std::cout << "Input password: ";
+					std::cin >> password;
+					std::cout << "Input first name: ";
+					std::cin >> firstName;
+					std::cout << "Input last name: ";
+					std::cin >> lastName;
 
-			uberApplication->registerClient(Client{ username,password,firstName,lastName });
+					uberApplication->registerClient(Client{
+						std::move(username),std::move(password),std::move(firstName),std::move(lastName) });
+					break;
+				}
+				catch (std::runtime_error& rex)
+				{
+					std::cout << rex.what() << std::endl;
+				}
+			} while (true);
+
 			std::cout << "\nClient registered successfully\n";
 		}
 
 		void registerDriver(UberApplication* uberApplication) {
-			MyString username, password, firstName, lastName, carNumber, phoneNumber;
-			std::cout << "\nInput username: ";
-			std::cin >> username;
-			std::cout << "\nInput password: ";
-			std::cin >> password;
-			std::cout << "\nInput first name: ";
-			std::cin >> firstName;
-			std::cout << "\nInput last name: ";
-			std::cin >> lastName;
-			std::cout << "\nInput car number: ";
-			std::cin >> carNumber;
-			std::cout << "\nInput phone number: ";
-			std::cin >> phoneNumber;
+			do
+			{
+				try
+				{
+					MyString username, password, firstName, lastName, carNumber, phoneNumber;
+					std::cout << "\nInput username: ";
+					std::cin >> username;
+					std::cout << "\nInput password: ";
+					std::cin >> password;
+					std::cout << "\nInput first name: ";
+					std::cin >> firstName;
+					std::cout << "\nInput last name: ";
+					std::cin >> lastName;
+					std::cout << "\nInput car number: ";
+					std::cin >> carNumber;
+					std::cout << "\nInput phone number: ";
+					std::cin >> phoneNumber;
 
-			uberApplication->registerDriver(
-				Driver{ username,password,firstName,lastName,carNumber,phoneNumber });
+					uberApplication->registerDriver(
+						Driver{ username,password,firstName,lastName,carNumber,phoneNumber });
+					break;
+				}
+				catch (std::runtime_error& rex)
+				{
+					std::cout << rex.what() << std::endl;
+				}
+			} while (true);
+
 			std::cout << "\nDriver registered successfully\n";
 		}
 
@@ -173,28 +198,78 @@ namespace EventHandlers
 		}
 
 		void login(UberApplication* uberApplication) {
-			MyString username, password;
-			std::cout << "\nInput username: ";
-			std::cin >> username;
-			std::cout << "\nInput password: ";
-			std::cin >> password;
+			do
+			{
+				MyString username, password;
+				std::cout << "\nInput username: ";
+				std::cin >> username;
+				std::cout << "\nInput password: ";
+				std::cin >> password;
 
-			try
-			{
-				uberApplication->login(std::move(username), std::move(password));
-				std::cout << "Login successful.\n";
-			}
-			catch (std::runtime_error& rtex)
-			{
-				std::cout << rtex.what() << std::endl;
-			}
+				try
+				{
+					uberApplication->login(std::move(username), std::move(password));
+					std::cout << "Login successful.\n";
+					break;
+				}
+				catch (std::logic_error& lex) // no users
+				{
+					std::cout << lex.what() << std::endl;
+					break;
+				}
+				catch (std::runtime_error& rtex)
+				{
+					std::cout << rtex.what() << std::endl;
+				}
+			} while (true);
 		}
 	}
 
 	namespace ClientEvents
 	{
 		void order(UberApplication* uberApplication) {
+			MyString addressName;
+			int coordXAddress = 0, coordYAddress = 0;
 
+			std::cout << "Input address name: ";
+			std::cin >> addressName;
+			std::cin >> coordXAddress;
+			std::cin >> coordYAddress;
+			std::cout << "Input address description (Press Enter for none): ";
+			char buffer[256]{};
+			std::cin.getline(buffer, 256);
+			std::cin.ignore();
+			MyString addressDescription{ buffer };
+
+			Address address{ addressName, coordXAddress, coordYAddress, addressDescription };
+
+			unsigned passengersCount = 0;
+			std::cin >> passengersCount;
+
+			MyString destinationName;
+			int coordXDestination = 0, coordYDestination = 0;
+
+			std::cout << "Input destination name: ";
+			std::cin >> destinationName;
+			std::cin >> coordXDestination;
+			std::cin >> coordYDestination;
+			std::cout << "Input destination description (Press Enter for none): ";
+			char bufferDest[256]{};
+			std::cin.getline(bufferDest, 256);
+			std::cin.ignore();
+			MyString destinationDescription{ buffer };
+
+			Address destination{ destinationName, coordXDestination, coordYDestination, destinationDescription };
+
+			Order order{
+				dynamic_cast<Client*>(uberApplication->getLoggedUser().operator->()),
+				nullptr,
+				std::move(address),
+				std::move(destination),
+				passengersCount };
+
+			std::cout << "Order ID: " << order.getId() << std::endl;
+			uberApplication->addOrder(std::move(order));
 		}
 		void checkOrder(UberApplication* uberApplication) {
 
@@ -248,6 +323,7 @@ namespace EventHandlers
 				SessionEvents::login(uberApplication);
 				break;
 			case SessionActions::exit:
+				exitApplication(uberApplication);
 				break;
 			default:
 				throw std::logic_error("Unknown command.");
@@ -278,6 +354,9 @@ namespace EventHandlers
 					break;
 				case ClientActions::add_money:
 					ClientEvents::addMoney(uberApplication);
+					break;
+				case ClientActions::exit:
+					exitApplication(uberApplication);
 					break;
 				default:
 					throw std::logic_error("Unknown command.");
@@ -314,6 +393,9 @@ namespace EventHandlers
 				case DriverActions::acceptPayment:
 					DriverEvents::acceptPayment(uberApplication);
 					break;
+				case DriverActions::exit:
+					exitApplication(uberApplication);
+					break;
 				default:
 					throw std::logic_error("Unknown command.");
 				}
@@ -331,16 +413,19 @@ int main()
 	UberApplication uberApplication;
 	uberApplication.load();
 
-	if (uberApplication.getLoggedUser().operator->() == nullptr)
+	do
 	{
-		EventHandlers::MainMenuEvents::handleLoginOrRegisterMenu(&uberApplication);
-	}
-	else if (uberApplication.getIsLoggedUserClient())
-	{
-		EventHandlers::MainMenuEvents::handleClientMenu(&uberApplication);
-	}
-	else
-	{
-		EventHandlers::MainMenuEvents::handleDriverMenu(&uberApplication);
-	}
+		if (uberApplication.getLoggedUser().operator->() == nullptr)
+		{
+			EventHandlers::MainMenuEvents::handleLoginOrRegisterMenu(&uberApplication);
+		}
+		else if (uberApplication.getIsLoggedUserClient())
+		{
+			EventHandlers::MainMenuEvents::handleClientMenu(&uberApplication);
+		}
+		else
+		{
+			EventHandlers::MainMenuEvents::handleDriverMenu(&uberApplication);
+		}
+	} while (true);
 }
