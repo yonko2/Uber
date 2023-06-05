@@ -26,6 +26,7 @@ class Order
 public:
 	Order() = default;
 	Order(Client* client, Driver* driver, const Address& address, unsigned passengers);
+	Order(Client* client, Driver* driver, Address&& address, unsigned passengers);
 
 	static size_t getLatestId();
 	static void setLatestId(size_t latestId);

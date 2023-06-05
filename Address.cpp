@@ -7,7 +7,7 @@ Address::Address(const MyString& name, const Pair<int, int>& coordinates)
 }
 
 Address::Address(const MyString& name, const Pair<int, int>& coordinates, const MyString& description) :
-	Address(name,coordinates)
+	Address(name, coordinates)
 {
 	this->description = description;
 }
@@ -20,9 +20,32 @@ Address::Address(const MyString& name, const int coordX, const int coordY)
 }
 
 Address::Address(const MyString& name, int coordX, int coordY, const MyString& description) :
-	Address(name,coordX, coordY)
+	Address(name, coordX, coordY)
 {
 	this->description = description;
+}
+
+Address::Address(MyString&& name, const Pair<int, int>& coordinates)
+{
+	this->name = std::move(name);
+	this->coordinates = coordinates;
+}
+
+Address::Address(MyString&& name, int coordX, int coordY) :
+	Address(std::move(name), Pair{ coordX,coordY })
+{
+}
+
+Address::Address(MyString&& name, int coordX, int coordY, MyString&& description):
+Address(std::move(name),coordX,coordY)
+{
+	this->description = std::move(description);
+}
+
+Address::Address(MyString&& name, const Pair<int, int>& coordinates, MyString&& description) :
+	Address(std::move(name), coordinates)
+{
+	this->description = std::move(description);
 }
 
 void Address::saveToFile(std::ofstream& ofs) const
