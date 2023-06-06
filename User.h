@@ -30,6 +30,8 @@ public:
 	const MyString& getLastName() const;
 	double getBalance() const;
 
+	void addToBalance(double amount);
+
 	bool comparePassword(const MyString& password) const;
 
 	virtual void saveToFile(std::ofstream& ofs) const;

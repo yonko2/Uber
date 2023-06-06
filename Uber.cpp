@@ -316,134 +316,164 @@ namespace EventHandlers
 			}
 		}
 		void pay(UberApplication* uberApplication) {
+			size_t orderId = 0;
+			std::cout << "Input order ID: ";
+			std::cin >> orderId;
+			double amount = 0;
+			std::cout << "Input amount: ";
+			std::cin >> amount;
 
+			try
+			{
+				uberApplication->pay(orderId, amount);
+			}
+			catch (std::runtime_error& rex)
+			{
+				std::cout << rex.what() << std::endl;
+			}
 		}
 		void rate(UberApplication* uberApplication) {
 
 		}
 		void addMoney(UberApplication* uberApplication) {
-
-		}
-	}
-
-	namespace DriverEvents
-	{
-		void acceptPayment(UberApplication* uberApplication) {
-
-		}
-		void acceptOrder(UberApplication* uberApplication) {
-
-		}
-		void checkMessages(UberApplication* uberApplication) {
-
-		}
-		void changeAddress(UberApplication* uberApplication) {
-
-		}
-		void declineOrder(UberApplication* uberApplication) {
-
-		}
-		void finishOrder(UberApplication* uberApplication) {
-
-		}
-	}
-
-	namespace MainMenuEvents
-	{
-		void handleLoginOrRegisterMenu(UberApplication* uberApplication)
-		{
-			switch (MenuInputGetters::getSessionAction())
+			try
 			{
-			case SessionActions::registerUser:
-				SessionEvents::registerUser(uberApplication);
+				double amount = 0;
+				std::cout << "Input amount: ";
+				std::cin >> amount;
+				if (amount <= 0)
+				{
+					throw std::runtime_error("Money amount must be positive.");
+				}
+
+				uberApplication->getLoggedUser()->addToBalance(amount);
+			}
+			catch (std::runtime_error& rex)
+			{
+				std::cout << rex.what();
+			}
+		}
+	}
+}
+
+namespace DriverEvents
+{
+	void acceptPayment(UberApplication* uberApplication) {
+
+	}
+	void acceptOrder(UberApplication* uberApplication) {
+
+	}
+	void checkMessages(UberApplication* uberApplication) {
+
+	}
+	void changeAddress(UberApplication* uberApplication) {
+
+	}
+	void declineOrder(UberApplication* uberApplication) {
+
+	}
+	void finishOrder(UberApplication* uberApplication) {
+
+	}
+}
+
+namespace MainMenuEvents
+{
+	void handleLoginOrRegisterMenu(UberApplication* uberApplication)
+	{
+		switch (MenuInputGetters::getSessionAction())
+		{
+		case SessionActions::registerUser:
+			SessionEvents::registerUser(uberApplication);
+			break;
+		case SessionActions::login:
+			SessionEvents::login(uberApplication);
+			break;
+		case SessionActions::exit:
+			exitApplication(uberApplication);
+			break;
+		default:
+			throw std::logic_error("Unknown command.");
+		}
+	}
+
+	void handleClientMenu(UberApplication* uberApplication)
+	{
+		ClientActions clientAction = MenuInputGetters::getClientAction();
+		while (clientAction != ClientActions::logout)
+		{
+			switch (clientAction)
+			{
+			case ClientActions::order:
+				ClientEvents::order(uberApplication);
 				break;
-			case SessionActions::login:
-				SessionEvents::login(uberApplication);
+			case ClientActions::checkOrder:
+				ClientEvents::checkOrder(uberApplication);
 				break;
-			case SessionActions::exit:
+			case ClientActions::cancelOrder:
+				ClientEvents::cancelOrder(uberApplication);
+				break;
+			case ClientActions::pay:
+				ClientEvents::pay(uberApplication);
+				break;
+			case ClientActions::rate:
+				ClientEvents::rate(uberApplication);
+				break;
+			case ClientActions::add_money:
+				ClientEvents::addMoney(uberApplication);
+				break;
+			case ClientActions::exit:
 				exitApplication(uberApplication);
 				break;
 			default:
 				throw std::logic_error("Unknown command.");
 			}
+
+			clientAction = MenuInputGetters::getClientAction();
 		}
 
-		void handleClientMenu(UberApplication* uberApplication)
-		{
-			ClientActions clientAction = MenuInputGetters::getClientAction();
-			while (clientAction != ClientActions::logout)
-			{
-				switch (clientAction)
-				{
-				case ClientActions::order:
-					ClientEvents::order(uberApplication);
-					break;
-				case ClientActions::checkOrder:
-					ClientEvents::checkOrder(uberApplication);
-					break;
-				case ClientActions::cancelOrder:
-					ClientEvents::cancelOrder(uberApplication);
-					break;
-				case ClientActions::pay:
-					ClientEvents::pay(uberApplication);
-					break;
-				case ClientActions::rate:
-					ClientEvents::rate(uberApplication);
-					break;
-				case ClientActions::add_money:
-					ClientEvents::addMoney(uberApplication);
-					break;
-				case ClientActions::exit:
-					exitApplication(uberApplication);
-					break;
-				default:
-					throw std::logic_error("Unknown command.");
-				}
-
-				clientAction = MenuInputGetters::getClientAction();
-			}
-
-			uberApplication->logout();
-		}
-
-		void handleDriverMenu(UberApplication* uberApplication)
-		{
-			DriverActions driverAction = MenuInputGetters::getDriverAction();
-			while (driverAction != DriverActions::logout)
-			{
-				switch (driverAction)
-				{
-				case DriverActions::changeAddress:
-					DriverEvents::changeAddress(uberApplication);
-					break;
-				case DriverActions::checkMessages:
-					DriverEvents::checkMessages(uberApplication);
-					break;
-				case DriverActions::acceptOrder:
-					DriverEvents::acceptOrder(uberApplication);
-					break;
-				case DriverActions::declineOrder:
-					DriverEvents::declineOrder(uberApplication);
-					break;
-				case DriverActions::finishOrder:
-					DriverEvents::finishOrder(uberApplication);
-					break;
-				case DriverActions::acceptPayment:
-					DriverEvents::acceptPayment(uberApplication);
-					break;
-				case DriverActions::exit:
-					exitApplication(uberApplication);
-					break;
-				default:
-					throw std::logic_error("Unknown command.");
-				}
-
-				driverAction = MenuInputGetters::getDriverAction();
-			}
-
-			uberApplication->logout();
-		}
+		uberApplication->logout();
 	}
+
+	void handleDriverMenu(UberApplication* uberApplication)
+	{
+		DriverActions driverAction = MenuInputGetters::getDriverAction();
+		while (driverAction != DriverActions::logout)
+		{
+			switch (driverAction)
+			{
+			case DriverActions::changeAddress:
+				DriverEvents::changeAddress(uberApplication);
+				break;
+			case DriverActions::checkMessages:
+				DriverEvents::checkMessages(uberApplication);
+				break;
+			case DriverActions::acceptOrder:
+				DriverEvents::acceptOrder(uberApplication);
+				break;
+			case DriverActions::declineOrder:
+				DriverEvents::declineOrder(uberApplication);
+				break;
+			case DriverActions::finishOrder:
+				DriverEvents::finishOrder(uberApplication);
+				break;
+			case DriverActions::acceptPayment:
+				DriverEvents::acceptPayment(uberApplication);
+				break;
+			case DriverActions::exit:
+				exitApplication(uberApplication);
+				break;
+			default:
+				throw std::logic_error("Unknown command.");
+			}
+
+			driverAction = MenuInputGetters::getDriverAction();
+		}
+
+		uberApplication->logout();
+	}
+}
 }
 
 int main()

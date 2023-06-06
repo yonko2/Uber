@@ -37,6 +37,21 @@ size_t Order::getId() const
 	return this->id;
 }
 
+OrderStatus Order::getOrderStatus() const
+{
+	return this->orderStatus;
+}
+
+UniquePointer<Client>& Order::getClient() const
+{
+	return this->client;
+}
+
+UniquePointer<Driver>& Order::getDriver() const
+{
+	return this->driver;
+}
+
 void Order::setOrderStatus(const OrderStatus orderStatus)
 {
 	this->orderStatus = orderStatus;

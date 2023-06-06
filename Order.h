@@ -45,6 +45,9 @@ public:
 	static void setLatestId(size_t latestId);
 
 	size_t getId() const;
+	OrderStatus getOrderStatus() const;
+	UniquePointer<Client>& getClient() const;
+	UniquePointer<Driver>& getDriver() const;
 
 	void setOrderStatus(OrderStatus orderStatus);
 

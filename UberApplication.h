@@ -64,5 +64,6 @@ public:
 
 	void removeOrder(size_t orderId);
 	void cancelOrder(size_t orderId);
+	void pay(size_t orderId, double amount);
 };
 

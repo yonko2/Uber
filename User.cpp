@@ -67,6 +67,11 @@ double User::getBalance() const
 	return this->balance;
 }
 
+void User::addToBalance(const double amount)
+{
+	this->balance += amount;
+}
+
 bool User::comparePassword(const MyString& password) const
 {
 	return HashingModule::hashString(password) == this->passwordHash;

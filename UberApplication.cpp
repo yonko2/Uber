@@ -322,9 +322,31 @@ void UberApplication::cancelOrder(const size_t orderId)
 	{
 		if (this->orders[i].getId() == orderId)
 		{
-			this->orders[i].setDriver(UniquePointer{ nullptr });
+			//this->orders[i].setDriver(UniquePointer{ nullptr });
 			this->orders[i].setOrderStatus(OrderStatus::canceled);
 			return;
+		}
+	}
+	throw std::runtime_error("Order ID not found.");
+}
+
+void UberApplication::pay(const size_t orderId, const double amount)
+{
+	const size_t ordersCount = this->orders.getSize();
+	for (size_t i = 0; i < ordersCount; i++)
+	{
+		if (this->orders[i].getId() == orderId &&
+			this->orders[i].getOrderStatus() == OrderStatus::completed)
+		{
+			Client* clientPtr = this->orders[i].getClient().operator->();
+			if (clientPtr->getBalance() - amount < 0)
+			{
+				throw std::logic_error("Not enough funds.");
+			}
+			clientPtr->addToBalance(-amount);
+
+			Driver* driverPtr = this->orders[i].getDriver().operator->();
+			driverPtr->addToBalance(amount);
 		}
 	}
 	throw std::runtime_error("Order ID not found.");
