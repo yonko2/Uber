@@ -12,17 +12,7 @@ enum class OrderStatus
 	canceled
 };
 
-const char* OrderStatusToString(OrderStatus e)
-{
-	switch (e)
-	{
-	case OrderStatus::created: return "created";
-	case OrderStatus::accepted: return "accepted";
-	case OrderStatus::completed: return "completed";
-	case OrderStatus::canceled: return "canceled";
-	default: return "unknown";
-	}
-}
+const char* OrderStatusToString(OrderStatus e);
 
 class Order
 {
@@ -46,8 +36,8 @@ public:
 
 	size_t getId() const;
 	OrderStatus getOrderStatus() const;
-	UniquePointer<Client>& getClient() const;
-	UniquePointer<Driver>& getDriver() const;
+	UniquePointer<Client>& getClient();
+	UniquePointer<Driver>& getDriver();
 
 	void setOrderStatus(OrderStatus orderStatus);
 
@@ -57,10 +47,10 @@ public:
 	void print() const;
 	void setDriver(UniquePointer<Driver>&& driverPtr);
 
-	/*Order(const Order&) = delete;
-	Order& operator=(const Order&) = delete;
+	Order(const Order& other) = delete;
+	Order& operator=(const Order& other) = delete;
 
-	Order(Order&&) noexcept;
-	Order& operator=(Order&&) noexcept;*/
+	Order(Order&& other) = default;
+	Order& operator=(Order&& other) = default;
 };
 

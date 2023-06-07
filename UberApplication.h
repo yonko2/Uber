@@ -59,7 +59,6 @@ public:
 	void addClient(Client&& client);
 	void addDriver(const Driver& driver);
 	void addDriver(Driver&& driver);
-	void addOrder(const Order& order);
 	void addOrder(Order&& order);
 
 	void removeOrder(size_t orderId);

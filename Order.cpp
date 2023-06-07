@@ -4,6 +4,18 @@
 
 size_t Order::latestId = 1;
 
+const char* OrderStatusToString(const OrderStatus e)
+{
+	switch (e)
+	{
+	case OrderStatus::created: return "created";
+	case OrderStatus::accepted: return "accepted";
+	case OrderStatus::completed: return "completed";
+	case OrderStatus::canceled: return "canceled";
+	default: return "unknown";
+	}
+}
+
 Order::Order(Client* client, Driver* driver, const Address& address, const Address& destination, const unsigned passengers)
 {
 	this->client = UniquePointer<Client>{ client };
@@ -42,12 +54,12 @@ OrderStatus Order::getOrderStatus() const
 	return this->orderStatus;
 }
 
-UniquePointer<Client>& Order::getClient() const
+UniquePointer<Client>& Order::getClient()
 {
 	return this->client;
 }
 
-UniquePointer<Driver>& Order::getDriver() const
+UniquePointer<Driver>& Order::getDriver()
 {
 	return this->driver;
 }
@@ -112,7 +124,7 @@ void Order::print() const
 {
 	std::cout << "Order status: " << OrderStatusToString(this->orderStatus) << '\n';
 
-	if (this->driver.operator->()!=nullptr)
+	if (this->driver.operator->() != nullptr)
 	{
 		this->driver->print();
 	}

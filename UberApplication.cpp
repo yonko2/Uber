@@ -291,11 +291,6 @@ void UberApplication::addDriver(Driver&& driver)
 	this->drivers.pushBack(std::move(driver));
 }
 
-void UberApplication::addOrder(const Order& order)
-{
-	this->orders.pushBack(order);
-}
-
 void UberApplication::addOrder(Order&& order)
 {
 	this->orders.pushBack(std::move(order));

@@ -200,7 +200,7 @@ void DynamicArray<T>::removeAt(size_t index)
 
 	for (size_t i = index; i < this->size - 1; i++)
 	{
-		this->arr[i] = this->arr[i + 1];
+		this->arr[i] = std::move(this->arr[i + 1]);
 	}
 	--this->size;
 }
