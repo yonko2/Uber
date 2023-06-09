@@ -181,3 +181,9 @@ void MainMenuEvents::handleDriverMenu(UberApplication* uberApplication)
 
 	uberApplication->logout();
 }
+
+void exitApplication(UberApplication* uberApplication)
+{
+	uberApplication->save();
+	exit(EXIT_SUCCESS);
+}

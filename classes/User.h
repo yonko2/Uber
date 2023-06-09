@@ -1,5 +1,5 @@
 #pragma once
-#include "MyString.h"
+#include "../external/MyString.h"
 
 class User
 {

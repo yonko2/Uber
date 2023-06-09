@@ -2,7 +2,8 @@
 #include "Address.h"
 #include "Client.h"
 #include "Driver.h"
-#include "UniquePointer.hpp"
+#include "../external/UniquePointer.hpp"
+#include "../external/DynamicArray.hpp"
 
 enum class OrderStatus
 {

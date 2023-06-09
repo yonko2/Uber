@@ -1,5 +1,5 @@
-#include "UberApplication.h"
-#include "MainMenuEvents.h"
+#include "classes/UberApplication.h"
+#include "events/MainMenuEvents.h"
 
 int main()
 {

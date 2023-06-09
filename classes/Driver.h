@@ -1,7 +1,6 @@
 #pragma once
 
 #include "User.h"
-#include "DynamicArray.hpp"
 
 enum class DriverActions
 {
@@ -20,8 +19,6 @@ class Driver : public User
 	double rating = 0;
 	MyString carNumber;
 	MyString phoneNumber;
-	DynamicArray<size_t> newOrderIDs;
-
 public:
 	Driver() = default;
 	Driver(const MyString& username, const MyString& password,

@@ -10,11 +10,7 @@ inline bool isInRange(const short num, const short LOWER_BOUND, const short UPPE
 	return num >= LOWER_BOUND && num <= UPPER_BOUND;
 }
 
-inline void exitApplication(UberApplication* uberApplication)
-{
-	uberApplication->save();
-	exit(EXIT_SUCCESS);
-}
+void exitApplication(UberApplication* uberApplication);
 
 namespace MenuInputGetters
 {

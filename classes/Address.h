@@ -1,6 +1,6 @@
 #pragma once
-#include "MyString.h"
-#include "Pair.hpp"
+#include "../external/MyString.h"
+#include "../external/Pair.hpp"
 
 struct Address
 {

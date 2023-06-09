@@ -1,5 +1,4 @@
 #include "Driver.h"
-//#include "Order.h"
 
 Driver::Driver(const MyString& username, const MyString& password, const MyString& firstName, const MyString& lastName,
 	const MyString& carNumber, const MyString& phoneNumber) :
@@ -24,12 +23,12 @@ void Driver::saveToFile(std::ofstream& ofs) const
 	carNumber.saveToFile(ofs);
 	phoneNumber.saveToFile(ofs);
 
-	const size_t ordersCount = newOrderIDs.getSize();
+	/*const size_t ordersCount = newOrderIDs.getSize();
 	ofs.write((const char*)&ordersCount, sizeof ordersCount);
 	for (size_t i = 0; i < ordersCount; i++)
 	{
 		ofs.write((const char*)&this->newOrderIDs[i], sizeof this->newOrderIDs[i]);
-	}
+	}*/
 }
 
 void Driver::readFromFile(std::ifstream& ifs)
@@ -39,14 +38,14 @@ void Driver::readFromFile(std::ifstream& ifs)
 	carNumber.readFromFile(ifs);
 	phoneNumber.readFromFile(ifs);
 
-	size_t ordersCount = 0;
+	/*size_t ordersCount = 0;
 	ifs.read((char*)&ordersCount, sizeof ordersCount);
 	for (size_t i = 0; i < ordersCount; i++)
 	{
 		size_t currId = 0;
 		ifs.read((char*)&currId, sizeof currId);
 		this->newOrderIDs.pushBack(currId);
-	}
+	}*/
 }
 
 void Driver::print() const

@@ -1,6 +1,6 @@
 #include "User.h"
 
-#include "HashingModule.h"
+#include "../external/HashingModule.h"
 
 size_t User::latestId = 1;
 
