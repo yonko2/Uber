@@ -64,5 +64,12 @@ public:
 	void removeOrder(size_t orderId);
 	void cancelOrder(size_t orderId);
 	void pay(size_t orderId, double amount);
+
+	Driver* getNearestFreeDriverPtr(const Pair<int, int>& origin);
+
+	bool usernameDriverExists(const MyString& username) const;
+	void addDriverRating(const MyString& username, double rating);
 };
+
+static double getDist(const Pair<int, int>& first, const Pair<int, int>& second);
 

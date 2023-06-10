@@ -94,7 +94,7 @@ void UberApplication::loadSession()
 		const size_t clientsCount = this->clients.getSize();
 		for (size_t i = 0; i < clientsCount; i++)
 		{
-			if (this->clients[i].getId()==loggedUserId)
+			if (this->clients[i].getId() == loggedUserId)
 			{
 				this->loggedUser = UniquePointer<User>{ &this->clients[i] };
 			}
@@ -347,6 +347,80 @@ void UberApplication::pay(const size_t orderId, const double amount)
 	throw std::runtime_error("Order ID not found.");
 }
 
+double getDist(const Pair<int, int>& first, const Pair<int, int>& second)
+{
+	return std::abs(
+		std::sqrt(std::pow(first.getFirst() - second.getFirst(), 2) +
+			std::pow(first.getSecond() - second.getSecond(), 2)));
+}
+
+Driver* UberApplication::getNearestFreeDriverPtr(const Pair<int, int>& origin)
+{
+	const size_t driversCount = this->drivers.getSize();
+	if (driversCount == 0)
+	{
+		throw std::runtime_error("No drivers available.");
+	}
+
+	double currentMinDist = -1;
+	Driver* currentNearestFreeDriverPtr = nullptr;
+
+	const size_t ordersCount = this->orders.getSize();
+	for (size_t i = 0; i < ordersCount; i++)
+	{
+		Order* currentOrder = &orders[i];
+		if (currentOrder->getOrderStatus() != OrderStatus::accepted)
+		{
+			double iterDist = getDist(origin, currentOrder->getDriver()->getAddress().coordinates);
+
+			if (currentMinDist == -1 || 
+				iterDist - currentMinDist < 0)
+			{
+				currentMinDist = iterDist;
+				currentNearestFreeDriverPtr = currentOrder->getDriver().operator->();
+			}
+		}
+	}
+
+	return currentNearestFreeDriverPtr;
+}
+
+bool UberApplication::usernameDriverExists(const MyString& username) const
+{
+	const size_t driversCount = this->drivers.getSize();
+	for (size_t i = 0; i < driversCount; i++)
+	{
+		if (this->drivers[i].getUsername() == username) return true;
+	}
+
+	return false;
+}
+
+void UberApplication::addDriverRating(const MyString& username, double rating)
+{
+	const size_t ordersCount = this->orders.getSize();
+	bool driverFound = false;
+	for (size_t i = 0; i < ordersCount; i++)
+	{
+		if (orders[i].getDriver()->getUsername() == username)
+		{
+			driverFound = true;
+			if (orders[i].getClient().operator->() == this->getLoggedUser().operator->() &&
+				orders[i].getOrderStatus() == OrderStatus::completed)
+			{
+				orders[i].getDriver().operator->()->giveRating(rating);
+				return;
+			}
+		}
+	}
+
+	if (driverFound == false)
+	{
+		throw std::runtime_error("Driver not found.");
+	}
+	throw std::runtime_error("No valid order found.");
+}
+
 void UberApplication::login(const MyString& username, const MyString& password)
 {
 	const size_t clientsCount = this->clients.getSize();
@@ -398,7 +472,7 @@ void UberApplication::login(MyString&& username, MyString&& password)
 			usernameFound = true;
 			if (this->clients[i].comparePassword(password))
 			{
-				this->loggedUser = UniquePointer<User>{ dynamic_cast<User*>(& this->clients[i])};
+				this->loggedUser = UniquePointer<User>{ dynamic_cast<User*>(&this->clients[i]) };
 				this->isClient = true;
 				return;
 			}

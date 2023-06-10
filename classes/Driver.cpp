@@ -16,12 +16,20 @@ Driver::Driver(MyString&& username, MyString&& password, MyString&& firstName, M
 	this->phoneNumber = std::move(phoneNumber);
 }
 
+const Address& Driver::getAddress() const
+{
+	return this->address;
+}
+
 void Driver::saveToFile(std::ofstream& ofs) const
 {
 	User::saveToFile(ofs);
 	ofs.write((const char*)&rating, sizeof rating);
 	carNumber.saveToFile(ofs);
 	phoneNumber.saveToFile(ofs);
+	address.saveToFile(ofs);
+	ofs.write((const char*)&ratingsCount, sizeof ratingsCount);
+	ofs.write((const char*)&ratingSum, sizeof ratingSum);
 
 	/*const size_t ordersCount = newOrderIDs.getSize();
 	ofs.write((const char*)&ordersCount, sizeof ordersCount);
@@ -37,6 +45,9 @@ void Driver::readFromFile(std::ifstream& ifs)
 	ifs.read((char*)&rating, sizeof rating);
 	carNumber.readFromFile(ifs);
 	phoneNumber.readFromFile(ifs);
+	address.readFromFile(ifs);
+	ifs.read((char*)&ratingsCount, sizeof ratingsCount);
+	ifs.read((char*)&ratingSum, sizeof ratingSum);
 
 	/*size_t ordersCount = 0;
 	ifs.read((char*)&ordersCount, sizeof ordersCount);
@@ -54,4 +65,11 @@ void Driver::print() const
 	std::cout << "Rating: " << rating << '\n'
 		<< "Car number: " << carNumber << '\n'
 		<< "Phone number: " << phoneNumber << std::endl;
+}
+
+void Driver::giveRating(const double rating)
+{
+	this->ratingSum += rating;
+	this->ratingsCount++;
+	this->rating = this->ratingSum / this->ratingsCount;
 }

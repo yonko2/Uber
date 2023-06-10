@@ -1,5 +1,7 @@
 #include "ClientEvents.h"
 
+#include "MainMenuEvents.h"
+
 void ClientEvents::order(UberApplication* uberApplication) {
 	MyString addressName;
 	int coordXAddress = 0, coordYAddress = 0;
@@ -35,15 +37,22 @@ void ClientEvents::order(UberApplication* uberApplication) {
 
 	Address destination{ destinationName, coordXDestination, coordYDestination, destinationDescription };
 
-	Order order{
+	try
+	{
+		Order order{
 		dynamic_cast<Client*>(uberApplication->getLoggedUser().operator->()),
-		nullptr,
+		uberApplication->getNearestFreeDriverPtr(address.coordinates),
 		std::move(address),
 		std::move(destination),
 		passengersCount };
 
-	std::cout << "Order ID: " << order.getId() << std::endl;
-	uberApplication->addOrder(std::move(order));
+		std::cout << "Order ID: " << order.getId() << std::endl;
+		uberApplication->addOrder(std::move(order));
+	}
+	catch (std::runtime_error& rex)
+	{
+		std::cout << rex.what() << std::endl;
+	}
 }
 
 void ClientEvents::checkOrder(UberApplication* uberApplication) {
@@ -74,6 +83,7 @@ void ClientEvents::checkOrder(UberApplication* uberApplication) {
 		std::cout << rex.what() << std::endl;
 	}
 }
+
 void ClientEvents::cancelOrder(UberApplication* uberApplication) {
 	try
 	{
@@ -89,6 +99,7 @@ void ClientEvents::cancelOrder(UberApplication* uberApplication) {
 		std::cout << rex.what() << std::endl;
 	}
 }
+
 void ClientEvents::pay(UberApplication* uberApplication) {
 	size_t orderId = 0;
 	std::cout << "Input order ID: ";
@@ -106,9 +117,60 @@ void ClientEvents::pay(UberApplication* uberApplication) {
 		std::cout << rex.what() << std::endl;
 	}
 }
-void ClientEvents::rate(UberApplication* uberApplication) {
 
+void ClientEvents::rate(UberApplication* uberApplication) {
+	MyString username;
+
+	while (true)
+	{
+		try
+		{
+			std::cout << "Input driver username: ";
+			std::cin >> username;
+
+			if (!uberApplication->usernameDriverExists(username))
+			{
+				throw std::runtime_error("Driver doesn't exist.");
+			}
+			break;
+		}
+		catch (std::runtime_error& rex)
+		{
+			std::cout << rex.what() << std::endl;
+		}
+	}
+
+	double rating = 0;
+
+	while (true)
+	{
+		try
+		{
+			std::cout << "Input rating (1-5): ";
+			std::cin >> rating;
+
+			if (isInRange(rating,1,5))
+			{
+				throw std::runtime_error("Rating not in range.");
+			}
+			break;
+		}
+		catch (std::runtime_error& rex)
+		{
+			std::cout << rex.what() << std::endl;
+		}
+	}
+
+	try
+	{
+		uberApplication->addDriverRating(username, rating);
+	}
+	catch (std::runtime_error& rex)
+	{
+		std::cout << rex.what() << std::endl;
+	}
 }
+
 void ClientEvents::addMoney(UberApplication* uberApplication) {
 	try
 	{

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Address.h"
 #include "User.h"
 
 enum class DriverActions
@@ -16,9 +17,13 @@ enum class DriverActions
 
 class Driver : public User
 {
-	double rating = 0;
+	double rating = -1;
 	MyString carNumber;
 	MyString phoneNumber;
+	Address address = {"N/A",0,0,""};
+	unsigned ratingsCount = 0;
+	double ratingSum = 0;
+
 public:
 	Driver() = default;
 	Driver(const MyString& username, const MyString& password,
@@ -28,8 +33,12 @@ public:
 		MyString&& firstName, MyString&& lastName,
 		MyString&& carNumber, MyString&& phoneNumber);
 
+	const Address& getAddress() const;
+
 	void saveToFile(std::ofstream& ofs) const override;
 	void readFromFile(std::ifstream& ifs) override;
 	void print() const override;
+
+	void giveRating(double rating);
 };
 
