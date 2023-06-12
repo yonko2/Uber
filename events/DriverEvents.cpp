@@ -4,16 +4,61 @@ void DriverEvents::acceptPayment(UberApplication* uberApplication) {
 
 }
 void DriverEvents::acceptOrder(UberApplication* uberApplication) {
+	size_t orderId = 0;
+	std::cout << "Input order ID: ";
+	std::cin >> orderId;
 
+	try
+	{
+		uberApplication->acceptOrder(orderId);
+
+		short minutes = 0;
+		std::cout << "Input minutes: ";
+		std::cin >> orderId;
+		// TODO: Impl print minutes for client on login.
+	}
+	catch (std::runtime_error& rex)
+	{
+		std::cout << rex.what() << std::endl;
+	}
 }
 void DriverEvents::checkMessages(UberApplication* uberApplication) {
 
 }
 void DriverEvents::changeAddress(UberApplication* uberApplication) {
+	MyString addressName;
+	int coordXAddress = 0, coordYAddress = 0;
 
+	std::cout << "Input address name: ";
+	std::cin >> addressName;
+	std::cout << "Input address coordinates: ";
+	std::cin >> coordXAddress;
+	std::cin >> coordYAddress;
+	std::cout << "Input address description (Press Enter for none): ";
+	char buffer[256]{};
+	std::cin.getline(buffer, 256);
+	std::cin.ignore();
+	MyString addressDescription{ buffer };
+
+	Address address{ addressName, coordXAddress, coordYAddress, addressDescription };
+
+	Driver* driverPtr = dynamic_cast<Driver*>(uberApplication->getLoggedUser().operator->());
+	driverPtr->setAddress(std::move(address));
+	std::cout << "Address changed successfully." << std::endl;
 }
 void DriverEvents::declineOrder(UberApplication* uberApplication) {
+	size_t orderId = 0;
+	std::cout << "Input order ID: ";
+	std::cin >> orderId;
 
+	try
+	{
+		uberApplication->declineOrder(orderId);
+	}
+	catch (std::runtime_error& rex)
+	{
+		std::cout << rex.what() << std::endl;
+	}
 }
 void DriverEvents::finishOrder(UberApplication* uberApplication) {
 

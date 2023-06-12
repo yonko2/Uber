@@ -34,6 +34,8 @@ public:
 		MyString&& carNumber, MyString&& phoneNumber);
 
 	const Address& getAddress() const;
+	void setAddress(const Address& address);
+	void setAddress(Address&& address);
 
 	void saveToFile(std::ofstream& ofs) const override;
 	void readFromFile(std::ifstream& ifs) override;

@@ -26,6 +26,7 @@ class Order
 	Address destination;
 	unsigned passengers = 0;
 	OrderStatus orderStatus = OrderStatus::created;
+	DynamicArray<size_t> declinedDriverIds;
 
 public:
 	Order() = default;

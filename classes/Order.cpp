@@ -87,6 +87,13 @@ void Order::saveToFile(std::ofstream& ofs) const
 	address.saveToFile(ofs);
 	ofs.write((const char*)&passengers, sizeof passengers);
 	ofs.write((const char*)&orderStatus, sizeof orderStatus);
+
+	const size_t declinedIdsCount = declinedDriverIds.getSize();
+	ofs.write((const char*)&declinedIdsCount, sizeof declinedIdsCount);
+	for (size_t i = 0; i < declinedIdsCount; i++)
+	{
+		ofs.write((const char*)&this->declinedDriverIds[i], sizeof this->declinedDriverIds[i]);
+	}
 }
 
 void Order::readFromFile(DynamicArray<Client>* clientsPtr, DynamicArray<Driver>* driversPtr, std::ifstream& ifs)
@@ -118,6 +125,13 @@ void Order::readFromFile(DynamicArray<Client>* clientsPtr, DynamicArray<Driver>*
 	address.readFromFile(ifs);
 	ifs.read((char*)&passengers, sizeof passengers);
 	ifs.read((char*)&orderStatus, sizeof orderStatus);
+
+	size_t declinedIdsCount = 0;
+	ifs.read((char*)&declinedIdsCount, sizeof declinedIdsCount);
+	for (size_t i = 0; i < declinedIdsCount; i++)
+	{
+		ifs.read((char*)&this->declinedDriverIds[i], sizeof this->declinedDriverIds[i]);
+	}
 }
 
 void Order::print() const

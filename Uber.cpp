@@ -3,22 +3,22 @@
 
 int main()
 {
-	UberApplication uberApplication;
-	uberApplication.load();
+	UberApplication* uberApplication = &UberApplication::getInstance();
+	uberApplication->load();
 
 	do
 	{
-		if (uberApplication.getLoggedUser().operator->() == nullptr)
+		if (uberApplication->getLoggedUser().operator->() == nullptr)
 		{
-			MainMenuEvents::handleLoginOrRegisterMenu(&uberApplication);
+			MainMenuEvents::handleLoginOrRegisterMenu(uberApplication);
 		}
-		else if (uberApplication.getIsLoggedUserClient())
+		else if (uberApplication->getIsLoggedUserClient())
 		{
-			MainMenuEvents::handleClientMenu(&uberApplication);
+			MainMenuEvents::handleClientMenu(uberApplication);
 		}
 		else
 		{
-			MainMenuEvents::handleDriverMenu(&uberApplication);
+			MainMenuEvents::handleDriverMenu(uberApplication);
 		}
 	} while (true);
 }

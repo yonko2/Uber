@@ -21,6 +21,16 @@ const Address& Driver::getAddress() const
 	return this->address;
 }
 
+void Driver::setAddress(const Address& address)
+{
+	this->address = address;
+}
+
+void Driver::setAddress(Address&& address)
+{
+	this->address = std::move(address);
+}
+
 void Driver::saveToFile(std::ofstream& ofs) const
 {
 	User::saveToFile(ofs);

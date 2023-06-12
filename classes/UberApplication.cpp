@@ -196,6 +196,12 @@ bool UberApplication::checkBinariesAvailability()
 	return toReturn;
 }
 
+UberApplication& UberApplication::getInstance()
+{
+	static UberApplication app;
+	return app;
+}
+
 void UberApplication::registerClient(Client&& client)
 {
 	const size_t clientsCount = this->clients.getSize();
@@ -373,7 +379,7 @@ Driver* UberApplication::getNearestFreeDriverPtr(const Pair<int, int>& origin)
 		{
 			double iterDist = getDist(origin, currentOrder->getDriver()->getAddress().coordinates);
 
-			if (currentMinDist == -1 || 
+			if (currentMinDist == -1 || // safe comparison, true only first time
 				iterDist - currentMinDist < 0)
 			{
 				currentMinDist = iterDist;
@@ -396,7 +402,7 @@ bool UberApplication::usernameDriverExists(const MyString& username) const
 	return false;
 }
 
-void UberApplication::addDriverRating(const MyString& username, double rating)
+void UberApplication::addDriverRating(const MyString& username, const double rating)
 {
 	const size_t ordersCount = this->orders.getSize();
 	bool driverFound = false;
@@ -419,6 +425,40 @@ void UberApplication::addDriverRating(const MyString& username, double rating)
 		throw std::runtime_error("Driver not found.");
 	}
 	throw std::runtime_error("No valid order found.");
+}
+
+void UberApplication::acceptOrder(const size_t orderId)
+{
+	const size_t ordersCount = this->orders.getSize();
+	bool orderFound = false;
+
+	for (size_t i = 0; i < ordersCount; i++)
+	{
+		if (this->orders[i].getId() == orderId)
+		{
+			orderFound = true;
+			if (this->orders[i].getDriver().operator->() != this->loggedUser.operator->())
+			{
+				throw std::logic_error("You don't have access to this order.");
+			}
+			if (this->orders[i].getOrderStatus() != OrderStatus::created)
+			{
+				throw std::logic_error("Order not available.");
+			}
+
+			this->orders[i].setOrderStatus(OrderStatus::accepted);
+		}
+	}
+
+	if (!orderFound)
+	{
+		throw std::logic_error("Order not found.");
+	}
+}
+
+void UberApplication::declineOrder(size_t orderId)
+{
+
 }
 
 void UberApplication::login(const MyString& username, const MyString& password)

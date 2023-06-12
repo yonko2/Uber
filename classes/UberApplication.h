@@ -31,11 +31,11 @@ class UberApplication // singleton
 	void loadOrders();
 
 	static bool checkBinariesAvailability();
-
-public:
 	UberApplication() = default;
 	UberApplication(const UberApplication& other) = delete; // because of UniquePointer
 	UberApplication& operator=(const UberApplication& other) = delete; // because ofUniquePointer
+public:
+	static UberApplication& getInstance();
 
 	void registerClient(Client&& client);
 	void registerDriver(Driver&& driver);
@@ -69,6 +69,8 @@ public:
 
 	bool usernameDriverExists(const MyString& username) const;
 	void addDriverRating(const MyString& username, double rating);
+	void acceptOrder(size_t orderId);
+	void declineOrder(size_t orderId);
 };
 
 static double getDist(const Pair<int, int>& first, const Pair<int, int>& second);
