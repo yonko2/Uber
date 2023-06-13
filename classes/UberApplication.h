@@ -65,6 +65,7 @@ public:
 	void cancelOrder(size_t orderId);
 	void pay(size_t orderId, double amount);
 
+	// TODO: Migrate to SharedPtr
 	Driver* getNearestFreeDriverPtr(const Pair<int, int>& origin);
 
 	bool usernameDriverExists(const MyString& username) const;

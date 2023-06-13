@@ -38,8 +38,11 @@ public:
 
 	size_t getId() const;
 	OrderStatus getOrderStatus() const;
+	const Address& getAddress() const;
 	SharedPtr<Client>& getClient();
 	SharedPtr<Driver>& getDriver();
+	const DynamicArray<size_t>& getDeclinedDriverIds() const;
+	DynamicArray<size_t>& getDeclinedDriverIds();
 
 	void setOrderStatus(OrderStatus orderStatus);
 

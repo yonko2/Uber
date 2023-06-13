@@ -54,6 +54,11 @@ OrderStatus Order::getOrderStatus() const
 	return this->orderStatus;
 }
 
+const Address& Order::getAddress() const
+{
+	return this->address;
+}
+
 SharedPtr<Client>& Order::getClient()
 {
 	return this->client;
@@ -62,6 +67,16 @@ SharedPtr<Client>& Order::getClient()
 SharedPtr<Driver>& Order::getDriver()
 {
 	return this->driver;
+}
+
+const DynamicArray<size_t>& Order::getDeclinedDriverIds() const
+{
+	return this->declinedDriverIds;
+}
+
+DynamicArray<size_t>& Order::getDeclinedDriverIds()
+{
+	return this->declinedDriverIds;
 }
 
 void Order::setOrderStatus(const OrderStatus orderStatus)

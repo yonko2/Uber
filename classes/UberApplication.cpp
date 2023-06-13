@@ -375,7 +375,11 @@ Driver* UberApplication::getNearestFreeDriverPtr(const Pair<int, int>& origin)
 	for (size_t i = 0; i < ordersCount; i++)
 	{
 		Order* currentOrder = &orders[i];
-		if (currentOrder->getOrderStatus() != OrderStatus::accepted)
+		const DynamicArray<size_t>* declDrivers = &currentOrder->getDeclinedDriverIds();
+
+		// Get nearest free driver
+		if (currentOrder->getOrderStatus() != OrderStatus::accepted && // accepted -> driver is unavailable
+			!declDrivers->contains(currentOrder->getDriver()->getId())) // driver hasn't declined
 		{
 			double iterDist = getDist(origin, currentOrder->getDriver()->getAddress().coordinates);
 
@@ -456,9 +460,37 @@ void UberApplication::acceptOrder(const size_t orderId)
 	}
 }
 
-void UberApplication::declineOrder(size_t orderId)
+void UberApplication::declineOrder(const size_t orderId)
 {
+	const size_t ordersCount = this->orders.getSize();
+	bool orderFound = false;
 
+	for (size_t i = 0; i < ordersCount; i++)
+	{
+		if (this->orders[i].getId() == orderId)
+		{
+			orderFound = true;
+			if (this->orders[i].getDriver().operator->() != this->loggedUser.operator->())
+			{
+				throw std::logic_error("You don't have access to this order.");
+			}
+			if (this->orders[i].getOrderStatus() != OrderStatus::created)
+			{
+				throw std::logic_error("Order not available.");
+			}
+
+			// Add current driver id to declined ids
+			this->orders[i].getDeclinedDriverIds().pushBack(this->orders[i].getDriver()->getId());
+
+			// Set driver to closest free one
+			this->orders[i].setDriver(this->getNearestFreeDriverPtr(this->orders[i].getAddress().coordinates));
+		}
+	}
+
+	if (!orderFound)
+	{
+		throw std::logic_error("Order not found.");
+	}
 }
 
 void UberApplication::login(const MyString& username, const MyString& password)
