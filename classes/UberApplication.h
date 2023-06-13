@@ -13,7 +13,7 @@ enum class SessionActions
 
 class UberApplication // singleton
 {
-	UniquePointer<User> loggedUser = nullptr;
+	SharedPtr<User> loggedUser = nullptr;
 	bool isClient = true;
 
 	DynamicArray<Client> clients;
@@ -32,8 +32,8 @@ class UberApplication // singleton
 
 	static bool checkBinariesAvailability();
 	UberApplication() = default;
-	UberApplication(const UberApplication& other) = delete; // because of UniquePointer
-	UberApplication& operator=(const UberApplication& other) = delete; // because ofUniquePointer
+	UberApplication(const UberApplication& other) = delete;
+	UberApplication& operator=(const UberApplication& other) = delete;
 public:
 	static UberApplication& getInstance();
 
@@ -51,8 +51,8 @@ public:
 	const DynamicArray<Driver>& getDrivers() const;
 	const DynamicArray<Order>& getOrders() const;
 
-	const UniquePointer<User>& getLoggedUser() const;
-	UniquePointer<User>& getLoggedUser();
+	const SharedPtr<User>& getLoggedUser() const;
+	SharedPtr<User>& getLoggedUser();
 	bool getIsLoggedUserClient() const;
 
 	void addClient(const Client& client);

@@ -96,7 +96,7 @@ void UberApplication::loadSession()
 		{
 			if (this->clients[i].getId() == loggedUserId)
 			{
-				this->loggedUser = UniquePointer<User>{ &this->clients[i] };
+				this->loggedUser = SharedPtr<User>{ &this->clients[i] };
 			}
 		}
 	}
@@ -107,7 +107,7 @@ void UberApplication::loadSession()
 		{
 			if (this->drivers[i].getId() == loggedUserId)
 			{
-				this->loggedUser = UniquePointer<User>{ &this->drivers[i] };
+				this->loggedUser = SharedPtr<User>{ &this->drivers[i] };
 			}
 		}
 	}
@@ -262,12 +262,12 @@ const DynamicArray<Order>& UberApplication::getOrders() const
 	return this->orders;
 }
 
-const UniquePointer<User>& UberApplication::getLoggedUser() const
+const SharedPtr<User>& UberApplication::getLoggedUser() const
 {
 	return this->loggedUser;
 }
 
-UniquePointer<User>& UberApplication::getLoggedUser()
+SharedPtr<User>& UberApplication::getLoggedUser()
 {
 	return this->loggedUser;
 }
@@ -323,7 +323,7 @@ void UberApplication::cancelOrder(const size_t orderId)
 	{
 		if (this->orders[i].getId() == orderId)
 		{
-			//this->orders[i].setDriver(UniquePointer{ nullptr });
+			//this->orders[i].setDriver(SharedPtr{ nullptr });
 			this->orders[i].setOrderStatus(OrderStatus::canceled);
 			return;
 		}
@@ -470,7 +470,7 @@ void UberApplication::login(const MyString& username, const MyString& password)
 		{
 			if (this->clients[i].comparePassword(password))
 			{
-				this->loggedUser = UniquePointer<User>{ &this->clients[i] };
+				this->loggedUser = SharedPtr<User>{ &this->clients[i] };
 				this->isClient = true;
 				return;
 			}
@@ -484,7 +484,7 @@ void UberApplication::login(const MyString& username, const MyString& password)
 		{
 			if (this->drivers[i].comparePassword(password))
 			{
-				this->loggedUser = UniquePointer<User>{ &this->drivers[i] };
+				this->loggedUser = SharedPtr<User>{ &this->drivers[i] };
 				this->isClient = false;
 				return;
 			}
@@ -512,7 +512,7 @@ void UberApplication::login(MyString&& username, MyString&& password)
 			usernameFound = true;
 			if (this->clients[i].comparePassword(password))
 			{
-				this->loggedUser = UniquePointer<User>{ dynamic_cast<User*>(&this->clients[i]) };
+				this->loggedUser = SharedPtr<User>{ dynamic_cast<User*>(&this->clients[i]) };
 				this->isClient = true;
 				return;
 			}
@@ -526,7 +526,7 @@ void UberApplication::login(MyString&& username, MyString&& password)
 			usernameFound = true;
 			if (this->drivers[i].comparePassword(password))
 			{
-				this->loggedUser = UniquePointer<User>{ &this->drivers[i] };
+				this->loggedUser = SharedPtr<User>{ &this->drivers[i] };
 				this->isClient = false;
 				return;
 			}
@@ -542,5 +542,5 @@ void UberApplication::login(MyString&& username, MyString&& password)
 
 void UberApplication::logout()
 {
-	loggedUser.release();
+	this->loggedUser = nullptr;
 }

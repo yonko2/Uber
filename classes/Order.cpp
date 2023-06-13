@@ -18,8 +18,8 @@ const char* OrderStatusToString(const OrderStatus e)
 
 Order::Order(Client* client, Driver* driver, const Address& address, const Address& destination, const unsigned passengers)
 {
-	this->client = UniquePointer<Client>{ client };
-	this->driver = UniquePointer<Driver>{ driver };
+	this->client = SharedPtr<Client>{ client };
+	this->driver = SharedPtr<Driver>{ driver };
 	this->address = address;
 	this->destination = destination;
 	this->passengers = passengers;
@@ -27,8 +27,8 @@ Order::Order(Client* client, Driver* driver, const Address& address, const Addre
 
 Order::Order(Client* client, Driver* driver, Address&& address, Address&& destination, const unsigned passengers)
 {
-	this->client = UniquePointer<Client>{ client };
-	this->driver = UniquePointer<Driver>{ driver };
+	this->client = SharedPtr<Client>{ client };
+	this->driver = SharedPtr<Driver>{ driver };
 	this->address = std::move(address);
 	this->destination = std::move(destination);
 	this->passengers = passengers;
@@ -54,12 +54,12 @@ OrderStatus Order::getOrderStatus() const
 	return this->orderStatus;
 }
 
-UniquePointer<Client>& Order::getClient()
+SharedPtr<Client>& Order::getClient()
 {
 	return this->client;
 }
 
-UniquePointer<Driver>& Order::getDriver()
+SharedPtr<Driver>& Order::getDriver()
 {
 	return this->driver;
 }
@@ -107,7 +107,7 @@ void Order::readFromFile(DynamicArray<Client>* clientsPtr, DynamicArray<Driver>*
 	{
 		if ((*clientsPtr)[i].getId() == clientId)
 		{
-			this->client = UniquePointer<Client>{ &(*clientsPtr)[i] };
+			this->client = SharedPtr<Client>{ &(*clientsPtr)[i] };
 		}
 	}
 
@@ -118,7 +118,7 @@ void Order::readFromFile(DynamicArray<Client>* clientsPtr, DynamicArray<Driver>*
 	{
 		if ((*driversPtr)[i].getId() == driverId)
 		{
-			this->driver = UniquePointer<Driver>{ &(*driversPtr)[i] };
+			this->driver = SharedPtr<Driver>{ &(*driversPtr)[i] };
 		}
 	}
 
@@ -144,7 +144,7 @@ void Order::print() const
 	}
 }
 
-void Order::setDriver(UniquePointer<Driver>&& driverPtr)
+void Order::setDriver(SharedPtr<Driver>&& driverPtr)
 {
-	this->driver = std::move(driverPtr);
+	this->driver = driverPtr;
 }

@@ -2,7 +2,7 @@
 #include "Address.h"
 #include "Client.h"
 #include "Driver.h"
-#include "../external/UniquePointer.hpp"
+#include "../external/SharedPtr.hpp"
 #include "../external/DynamicArray.hpp"
 
 enum class OrderStatus
@@ -20,8 +20,8 @@ class Order
 	static size_t latestId;
 
 	size_t id = 0;
-	UniquePointer<Client> client;
-	UniquePointer<Driver> driver;
+	SharedPtr<Client> client;
+	SharedPtr<Driver> driver;
 	Address address;
 	Address destination;
 	unsigned passengers = 0;
@@ -38,8 +38,8 @@ public:
 
 	size_t getId() const;
 	OrderStatus getOrderStatus() const;
-	UniquePointer<Client>& getClient();
-	UniquePointer<Driver>& getDriver();
+	SharedPtr<Client>& getClient();
+	SharedPtr<Driver>& getDriver();
 
 	void setOrderStatus(OrderStatus orderStatus);
 
@@ -47,12 +47,12 @@ public:
 	void readFromFile(DynamicArray<Client>* clientsPtr, DynamicArray<Driver>* driversPtr, std::ifstream& ifs);
 
 	void print() const;
-	void setDriver(UniquePointer<Driver>&& driverPtr);
+	void setDriver(SharedPtr<Driver>&& driverPtr);
 
-	Order(const Order& other) = delete;
+	/*Order(const Order& other) = delete;
 	Order& operator=(const Order& other) = delete;
 
 	Order(Order&& other) = default;
-	Order& operator=(Order&& other) = default;
+	Order& operator=(Order&& other) = default;*/
 };
 
