@@ -8,9 +8,13 @@ void UberApplication::saveSession() const
 		throw std::exception("File not open.");
 	}
 
-	const size_t loggedUserId = this->loggedUser->getId();
-	session.write((const char*)&loggedUserId, sizeof loggedUserId);
-	session.write((const char*)&this->isClient, sizeof this->isClient);
+	// Guard: session needs logged user
+	if (this->getLoggedUser() != nullptr)
+	{
+		const size_t loggedUserId = this->loggedUser->getId();
+		session.write((const char*)&loggedUserId, sizeof loggedUserId);
+		session.write((const char*)&this->isClient, sizeof this->isClient);
+	}
 
 	session.close();
 }
@@ -86,6 +90,12 @@ void UberApplication::loadSession()
 		throw std::exception("File not open.");
 	}
 
+	if (session.peek() == std::ifstream::traits_type::eof()) // no logged user
+	{
+		session.close();
+		return;
+	}
+
 	size_t loggedUserId = 0;
 	session.read((char*)&loggedUserId, sizeof loggedUserId);
 	session.read((char*)&this->isClient, sizeof this->isClient);
@@ -96,7 +106,7 @@ void UberApplication::loadSession()
 		{
 			if (this->clients[i].getId() == loggedUserId)
 			{
-				this->loggedUser = SharedPtr<User>{ &this->clients[i] };
+				this->loggedUser = dynamic_cast<User*>(&this->clients[i]);
 			}
 		}
 	}
@@ -107,7 +117,7 @@ void UberApplication::loadSession()
 		{
 			if (this->drivers[i].getId() == loggedUserId)
 			{
-				this->loggedUser = SharedPtr<User>{ &this->drivers[i] };
+				this->loggedUser = dynamic_cast<User*>(&this->drivers[i]);
 			}
 		}
 	}
@@ -262,12 +272,12 @@ const DynamicArray<Order>& UberApplication::getOrders() const
 	return this->orders;
 }
 
-const SharedPtr<User>& UberApplication::getLoggedUser() const
+const User* UberApplication::getLoggedUser() const
 {
 	return this->loggedUser;
 }
 
-SharedPtr<User>& UberApplication::getLoggedUser()
+User* UberApplication::getLoggedUser()
 {
 	return this->loggedUser;
 }
@@ -415,7 +425,7 @@ void UberApplication::addDriverRating(const MyString& username, const double rat
 		if (orders[i].getDriver()->getUsername() == username)
 		{
 			driverFound = true;
-			if (orders[i].getClient().operator->() == this->getLoggedUser().operator->() &&
+			if (orders[i].getClient().operator->() == this->getLoggedUser() &&
 				orders[i].getOrderStatus() == OrderStatus::completed)
 			{
 				orders[i].getDriver().operator->()->giveRating(rating);
@@ -441,7 +451,7 @@ void UberApplication::acceptOrder(const size_t orderId)
 		if (this->orders[i].getId() == orderId)
 		{
 			orderFound = true;
-			if (this->orders[i].getDriver().operator->() != this->loggedUser.operator->())
+			if (this->orders[i].getDriver().operator->() != this->loggedUser)
 			{
 				throw std::logic_error("You don't have access to this order.");
 			}
@@ -470,7 +480,7 @@ void UberApplication::declineOrder(const size_t orderId)
 		if (this->orders[i].getId() == orderId)
 		{
 			orderFound = true;
-			if (this->orders[i].getDriver().operator->() != this->loggedUser.operator->())
+			if (this->orders[i].getDriver().operator->() != this->loggedUser)
 			{
 				throw std::logic_error("You don't have access to this order.");
 			}
@@ -502,7 +512,7 @@ void UberApplication::login(const MyString& username, const MyString& password)
 		{
 			if (this->clients[i].comparePassword(password))
 			{
-				this->loggedUser = SharedPtr<User>{ &this->clients[i] };
+				this->loggedUser = dynamic_cast<User*>(&this->clients[i]);
 				this->isClient = true;
 				return;
 			}
@@ -516,7 +526,7 @@ void UberApplication::login(const MyString& username, const MyString& password)
 		{
 			if (this->drivers[i].comparePassword(password))
 			{
-				this->loggedUser = SharedPtr<User>{ &this->drivers[i] };
+				this->loggedUser = dynamic_cast<User*>(&this->drivers[i]);
 				this->isClient = false;
 				return;
 			}
@@ -544,7 +554,7 @@ void UberApplication::login(MyString&& username, MyString&& password)
 			usernameFound = true;
 			if (this->clients[i].comparePassword(password))
 			{
-				this->loggedUser = SharedPtr<User>{ dynamic_cast<User*>(&this->clients[i]) };
+				this->loggedUser = dynamic_cast<User*>(&this->clients[i]) ;
 				this->isClient = true;
 				return;
 			}
@@ -558,7 +568,7 @@ void UberApplication::login(MyString&& username, MyString&& password)
 			usernameFound = true;
 			if (this->drivers[i].comparePassword(password))
 			{
-				this->loggedUser = SharedPtr<User>{ &this->drivers[i] };
+				this->loggedUser = dynamic_cast<User*>(&this->drivers[i]) ;
 				this->isClient = false;
 				return;
 			}

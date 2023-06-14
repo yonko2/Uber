@@ -13,7 +13,7 @@ enum class SessionActions
 
 class UberApplication // singleton
 {
-	SharedPtr<User> loggedUser = nullptr;
+	User* loggedUser = nullptr;
 	bool isClient = true;
 
 	DynamicArray<Client> clients;
@@ -51,8 +51,8 @@ public:
 	const DynamicArray<Driver>& getDrivers() const;
 	const DynamicArray<Order>& getOrders() const;
 
-	const SharedPtr<User>& getLoggedUser() const;
-	SharedPtr<User>& getLoggedUser();
+	const User* getLoggedUser() const;
+	User* getLoggedUser();
 	bool getIsLoggedUserClient() const;
 
 	void addClient(const Client& client);

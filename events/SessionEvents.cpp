@@ -35,17 +35,17 @@ void SessionEvents::registerDriver(UberApplication* uberApplication) {
 		try
 		{
 			MyString username, password, firstName, lastName, carNumber, phoneNumber;
-			std::cout << "\nInput username: ";
+			std::cout << "Input username: ";
 			std::cin >> username;
-			std::cout << "\nInput password: ";
+			std::cout << "Input password: ";
 			std::cin >> password;
-			std::cout << "\nInput first name: ";
+			std::cout << "Input first name: ";
 			std::cin >> firstName;
-			std::cout << "\nInput last name: ";
+			std::cout << "Input last name: ";
 			std::cin >> lastName;
-			std::cout << "\nInput car number: ";
+			std::cout << "Input car number: ";
 			std::cin >> carNumber;
-			std::cout << "\nInput phone number: ";
+			std::cout << "Input phone number: ";
 			std::cin >> phoneNumber;
 
 			uberApplication->registerDriver(
@@ -72,6 +72,8 @@ void SessionEvents::registerUser(UberApplication* uberApplication) {
 	while (!isInRange(userType, MIN_USER_OPTION, MAX_USER_OPTION))
 	{
 		std::cout << INVALID_OPTION_MESSAGE;
+		std::cin.clear();
+		std::cin.ignore();
 		std::cin >> userType;
 	}
 
@@ -92,9 +94,9 @@ void SessionEvents::login(UberApplication* uberApplication) {
 	do
 	{
 		MyString username, password;
-		std::cout << "\nInput username: ";
+		std::cout << "Input username: ";
 		std::cin >> username;
-		std::cout << "\nInput password: ";
+		std::cout << "Input password: ";
 		std::cin >> password;
 
 		try

@@ -8,7 +8,7 @@ int main()
 
 	do
 	{
-		if (uberApplication->getLoggedUser().operator->() == nullptr)
+		if (uberApplication->getLoggedUser() == nullptr)
 		{
 			MainMenuEvents::handleLoginOrRegisterMenu(uberApplication);
 		}

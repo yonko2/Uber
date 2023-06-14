@@ -5,14 +5,16 @@ ClientActions MenuInputGetters::getClientAction()
 	const short MIN_CLIENT_ACTION = 1;
 	const short MAX_CLIENT_ACTION = 8;
 
-	std::cout << "Choose an option:\n1) Make order\n2) Check order3) Cancel order\n"
-		<< "4) Pay\n5) Rate\n6) Add money\n7) Logout\n8) Exit";
+	std::cout << "Choose an option:\n1) Make order\n2) Check order\n3) Cancel order\n"
+		<< "4) Pay\n5) Rate\n6) Add money\n7) Logout\n8) Exit\n";
 	short clientOption = 0;
 	std::cin >> clientOption;
 
 	while (!isInRange(clientOption, MIN_CLIENT_ACTION, MAX_CLIENT_ACTION))
 	{
 		std::cout << INVALID_OPTION_MESSAGE;
+		std::cin.clear();
+		std::cin.ignore();
 		std::cin >> clientOption;
 	}
 
@@ -43,6 +45,8 @@ SessionActions MenuInputGetters::getSessionAction()
 	while (!isInRange(sessionOption, MIN_SESSION_ACTION, MAX_SESSION_ACTION))
 	{
 		std::cout << INVALID_OPTION_MESSAGE;
+		std::cin.clear();
+		std::cin.ignore();
 		std::cin >> sessionOption;
 	}
 
@@ -59,9 +63,9 @@ SessionActions MenuInputGetters::getSessionAction()
 DriverActions MenuInputGetters::getDriverAction()
 {
 	const short MIN_DRIVER_ACTION = 1;
-	const short MAX_DRIVER_ACTION = 7;
+	const short MAX_DRIVER_ACTION = 8;
 
-	std::cout << "Choose an option:\n1) Change address\2) Check messages\n"
+	std::cout << "Choose an option:\n1) Change address\n2) Check messages\n"
 		<< "3) Accept order\n4) Decline order\n5) Finish order\n6) Accept payment\n"
 		<< "7) Logout\n8) Exit\n";
 	short sessionOption = 0;
@@ -70,6 +74,8 @@ DriverActions MenuInputGetters::getDriverAction()
 	while (!isInRange(sessionOption, MIN_DRIVER_ACTION, MAX_DRIVER_ACTION))
 	{
 		std::cout << INVALID_OPTION_MESSAGE;
+		std::cin.clear();
+		std::cin.ignore();
 		std::cin >> sessionOption;
 	}
 

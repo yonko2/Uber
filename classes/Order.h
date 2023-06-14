@@ -51,11 +51,5 @@ public:
 
 	void print() const;
 	void setDriver(SharedPtr<Driver>&& driverPtr);
-
-	/*Order(const Order& other) = delete;
-	Order& operator=(const Order& other) = delete;
-
-	Order(Order&& other) = default;
-	Order& operator=(Order&& other) = default;*/
 };
 

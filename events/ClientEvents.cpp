@@ -13,12 +13,13 @@ void ClientEvents::order(UberApplication* uberApplication) {
 	std::cin >> coordYAddress;
 	std::cout << "Input address description (Press Enter for none): ";
 	char buffer[256]{};
-	std::cin.getline(buffer, 256);
 	std::cin.ignore();
+	std::cin.getline(buffer, 256);
 	MyString addressDescription{ buffer };
 
 	Address address{ addressName, coordXAddress, coordYAddress, addressDescription };
 
+	std::cout << "Input passengers count: ";
 	unsigned passengersCount = 0;
 	std::cin >> passengersCount;
 
@@ -27,12 +28,13 @@ void ClientEvents::order(UberApplication* uberApplication) {
 
 	std::cout << "Input destination name: ";
 	std::cin >> destinationName;
+	std::cout << "Input destination coordinates: ";
 	std::cin >> coordXDestination;
 	std::cin >> coordYDestination;
 	std::cout << "Input destination description (Press Enter for none): ";
 	char bufferDest[256]{};
-	std::cin.getline(bufferDest, 256);
 	std::cin.ignore();
+	std::cin.getline(bufferDest, 256);
 	MyString destinationDescription{ buffer };
 
 	Address destination{ destinationName, coordXDestination, coordYDestination, destinationDescription };
@@ -40,7 +42,7 @@ void ClientEvents::order(UberApplication* uberApplication) {
 	try
 	{
 		Order order{
-		dynamic_cast<Client*>(uberApplication->getLoggedUser().operator->()),
+		dynamic_cast<Client*>(uberApplication->getLoggedUser()),
 		uberApplication->getNearestFreeDriverPtr(address.coordinates),
 		std::move(address),
 		std::move(destination),
@@ -52,6 +54,7 @@ void ClientEvents::order(UberApplication* uberApplication) {
 	catch (std::runtime_error& rex)
 	{
 		std::cout << rex.what() << std::endl;
+		std::cin.ignore();
 	}
 }
 

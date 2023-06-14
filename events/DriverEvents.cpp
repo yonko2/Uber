@@ -42,7 +42,7 @@ void DriverEvents::changeAddress(UberApplication* uberApplication) {
 
 	Address address{ addressName, coordXAddress, coordYAddress, addressDescription };
 
-	Driver* driverPtr = dynamic_cast<Driver*>(uberApplication->getLoggedUser().operator->());
+	Driver* driverPtr = dynamic_cast<Driver*>(uberApplication->getLoggedUser());
 	driverPtr->setAddress(std::move(address));
 	std::cout << "Address changed successfully." << std::endl;
 }
