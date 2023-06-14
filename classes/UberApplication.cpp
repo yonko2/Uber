@@ -349,14 +349,14 @@ void UberApplication::pay(const size_t orderId, const double amount)
 		if (this->orders[i].getId() == orderId &&
 			this->orders[i].getOrderStatus() == OrderStatus::completed)
 		{
-			Client* clientPtr = this->orders[i].getClient().operator->();
+			Client* clientPtr = this->orders[i].getClient();
 			if (clientPtr->getBalance() - amount < 0)
 			{
 				throw std::logic_error("Not enough funds.");
 			}
 			clientPtr->addToBalance(-amount);
 
-			Driver* driverPtr = this->orders[i].getDriver().operator->();
+			Driver* driverPtr = this->orders[i].getDriver();
 			driverPtr->addToBalance(amount);
 		}
 	}
@@ -397,7 +397,7 @@ Driver* UberApplication::getNearestFreeDriverPtr(const Pair<int, int>& origin)
 				iterDist - currentMinDist < 0)
 			{
 				currentMinDist = iterDist;
-				currentNearestFreeDriverPtr = currentOrder->getDriver().operator->();
+				currentNearestFreeDriverPtr = currentOrder->getDriver();
 			}
 		}
 	}
@@ -425,10 +425,10 @@ void UberApplication::addDriverRating(const MyString& username, const double rat
 		if (orders[i].getDriver()->getUsername() == username)
 		{
 			driverFound = true;
-			if (orders[i].getClient().operator->() == this->getLoggedUser() &&
+			if (orders[i].getClient() == this->getLoggedUser() &&
 				orders[i].getOrderStatus() == OrderStatus::completed)
 			{
-				orders[i].getDriver().operator->()->giveRating(rating);
+				orders[i].getDriver()->giveRating(rating);
 				return;
 			}
 		}
@@ -451,7 +451,7 @@ void UberApplication::acceptOrder(const size_t orderId)
 		if (this->orders[i].getId() == orderId)
 		{
 			orderFound = true;
-			if (this->orders[i].getDriver().operator->() != this->loggedUser)
+			if (this->orders[i].getDriver() != this->loggedUser)
 			{
 				throw std::logic_error("You don't have access to this order.");
 			}
@@ -480,7 +480,7 @@ void UberApplication::declineOrder(const size_t orderId)
 		if (this->orders[i].getId() == orderId)
 		{
 			orderFound = true;
-			if (this->orders[i].getDriver().operator->() != this->loggedUser)
+			if (this->orders[i].getDriver() != this->loggedUser)
 			{
 				throw std::logic_error("You don't have access to this order.");
 			}
@@ -513,7 +513,7 @@ void UberApplication::finishOrder(const size_t orderId)
 		if (this->orders[i].getId() == orderId)
 		{
 			orderFound = true;
-			if (this->orders[i].getDriver().operator->() != this->loggedUser)
+			if (this->orders[i].getDriver() != this->loggedUser)
 			{
 				throw std::logic_error("You don't have access to this order.");
 			}

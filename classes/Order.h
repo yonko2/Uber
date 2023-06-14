@@ -20,8 +20,8 @@ class Order
 	static size_t latestId;
 
 	size_t id = 0;
-	SharedPtr<Client> client;
-	SharedPtr<Driver> driver;
+	Client* client;
+	Driver* driver;
 	Address address;
 	Address destination;
 	unsigned passengers = 0;
@@ -39,8 +39,8 @@ public:
 	size_t getId() const;
 	OrderStatus getOrderStatus() const;
 	const Address& getAddress() const;
-	SharedPtr<Client>& getClient();
-	SharedPtr<Driver>& getDriver();
+	Client* getClient();
+	Driver* getDriver();
 	const DynamicArray<size_t>& getDeclinedDriverIds() const;
 	DynamicArray<size_t>& getDeclinedDriverIds();
 
@@ -50,6 +50,6 @@ public:
 	void readFromFile(DynamicArray<Client>* clientsPtr, DynamicArray<Driver>* driversPtr, std::ifstream& ifs);
 
 	void print() const;
-	void setDriver(SharedPtr<Driver>&& driverPtr);
+	void setDriver(Driver* driverPtr);
 };
 

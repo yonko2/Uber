@@ -18,8 +18,8 @@ const char* OrderStatusToString(const OrderStatus e)
 
 Order::Order(Client* client, Driver* driver, const Address& address, const Address& destination, const unsigned passengers)
 {
-	this->client = SharedPtr<Client>{ client };
-	this->driver = SharedPtr<Driver>{ driver };
+	this->client = client;
+	this->driver = driver;
 	this->address = address;
 	this->destination = destination;
 	this->passengers = passengers;
@@ -27,8 +27,8 @@ Order::Order(Client* client, Driver* driver, const Address& address, const Addre
 
 Order::Order(Client* client, Driver* driver, Address&& address, Address&& destination, const unsigned passengers)
 {
-	this->client = SharedPtr<Client>{ client };
-	this->driver = SharedPtr<Driver>{ driver };
+	this->client = client;
+	this->driver = driver;
 	this->address = std::move(address);
 	this->destination = std::move(destination);
 	this->passengers = passengers;
@@ -59,12 +59,12 @@ const Address& Order::getAddress() const
 	return this->address;
 }
 
-SharedPtr<Client>& Order::getClient()
+Client* Order::getClient()
 {
 	return this->client;
 }
 
-SharedPtr<Driver>& Order::getDriver()
+Driver* Order::getDriver()
 {
 	return this->driver;
 }
@@ -86,7 +86,7 @@ void Order::setOrderStatus(const OrderStatus orderStatus)
 
 void Order::saveToFile(std::ofstream& ofs) const
 {
-	if (client.operator->() == nullptr || driver.operator->() == nullptr)
+	if (client == nullptr || driver == nullptr)
 	{
 		throw std::exception("Empty order");
 	}
@@ -122,7 +122,7 @@ void Order::readFromFile(DynamicArray<Client>* clientsPtr, DynamicArray<Driver>*
 	{
 		if ((*clientsPtr)[i].getId() == clientId)
 		{
-			this->client = SharedPtr<Client>{ &(*clientsPtr)[i] };
+			this->client = &(*clientsPtr)[i];
 		}
 	}
 
@@ -133,7 +133,7 @@ void Order::readFromFile(DynamicArray<Client>* clientsPtr, DynamicArray<Driver>*
 	{
 		if ((*driversPtr)[i].getId() == driverId)
 		{
-			this->driver = SharedPtr<Driver>{ &(*driversPtr)[i] };
+			this->driver = &(*driversPtr)[i];
 		}
 	}
 
@@ -153,13 +153,13 @@ void Order::print() const
 {
 	std::cout << "Order status: " << OrderStatusToString(this->orderStatus) << '\n';
 
-	if (this->driver.operator->() != nullptr)
+	if (this->driver != nullptr)
 	{
 		this->driver->print();
 	}
 }
 
-void Order::setDriver(SharedPtr<Driver>&& driverPtr)
+void Order::setDriver(Driver* driverPtr)
 {
 	this->driver = driverPtr;
 }
