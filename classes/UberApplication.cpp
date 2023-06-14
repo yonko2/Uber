@@ -503,6 +503,35 @@ void UberApplication::declineOrder(const size_t orderId)
 	}
 }
 
+void UberApplication::finishOrder(const size_t orderId)
+{
+	const size_t ordersCount = this->orders.getSize();
+	bool orderFound = false;
+
+	for (size_t i = 0; i < ordersCount; i++)
+	{
+		if (this->orders[i].getId() == orderId)
+		{
+			orderFound = true;
+			if (this->orders[i].getDriver().operator->() != this->loggedUser)
+			{
+				throw std::logic_error("You don't have access to this order.");
+			}
+			if (this->orders[i].getOrderStatus() != OrderStatus::accepted)
+			{
+				throw std::logic_error("Order not available.");
+			}
+
+			this->orders[i].setOrderStatus(OrderStatus::completed);
+		}
+	}
+
+	if (!orderFound)
+	{
+		throw std::logic_error("Order not found.");
+	}
+}
+
 void UberApplication::login(const MyString& username, const MyString& password)
 {
 	const size_t clientsCount = this->clients.getSize();

@@ -72,6 +72,7 @@ public:
 	void addDriverRating(const MyString& username, double rating);
 	void acceptOrder(size_t orderId);
 	void declineOrder(size_t orderId);
+	void finishOrder(size_t orderId);
 };
 
 static double getDist(const Pair<int, int>& first, const Pair<int, int>& second);
