@@ -1,7 +1,18 @@
 #include "DriverEvents.h"
 
 void DriverEvents::acceptPayment(UberApplication* uberApplication) {
-	
+	size_t orderId = 0;
+	std::cout << "Input order ID: ";
+	std::cin >> orderId;
+
+	try
+	{
+		uberApplication->acceptPayment(orderId);
+	}
+	catch (std::runtime_error& rex)
+	{
+		std::cout << rex.what() << std::endl;
+	}
 }
 
 void DriverEvents::acceptOrder(UberApplication* uberApplication) {

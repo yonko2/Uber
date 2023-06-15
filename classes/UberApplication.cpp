@@ -206,6 +206,33 @@ bool UberApplication::checkBinariesAvailability()
 	return toReturn;
 }
 
+void UberApplication::checkOrder(const size_t orderId)
+{
+	const size_t ordersCount = orders.getSize();
+	for (size_t i = 0; i < ordersCount; i++)
+	{
+		if (orders[i].getId() == orderId)
+		{
+			orders[i].print();
+			return;
+		}
+	}
+	throw std::runtime_error("ID not found");
+}
+
+void UberApplication::acceptPayment(const size_t orderId)
+{
+	const size_t ordersCount = orders.getSize();
+	for (size_t i = 0; i < ordersCount; i++)
+	{
+		if (orders[i].getId() == orderId)
+		{
+			orders[i].driver->addToBalance(orders[i].revenue);
+		}
+	}
+	throw std::runtime_error("ID not found");
+}
+
 UberApplication& UberApplication::getInstance()
 {
 	static UberApplication app;
@@ -333,7 +360,6 @@ void UberApplication::cancelOrder(const size_t orderId)
 	{
 		if (this->orders[i].getId() == orderId)
 		{
-			//this->orders[i].setDriver(SharedPtr{ nullptr });
 			this->orders[i].setOrderStatus(OrderStatus::canceled);
 			return;
 		}

@@ -34,10 +34,14 @@ class UberApplication // singleton
 	Driver* getNearestFreeDriverPtr(const Pair<int, int>& origin);
 
 	UberApplication() = default;
+public:
 	UberApplication(const UberApplication& other) = delete;
 	UberApplication& operator=(const UberApplication& other) = delete;
-public:
+	void acceptPayment(size_t orderId);
+
 	static UberApplication& getInstance();
+
+	bool usernameDriverExists(const MyString& username) const;
 
 	void registerClient(Client&& client);
 	void registerDriver(Driver&& driver);
@@ -67,10 +71,10 @@ public:
 	void cancelOrder(size_t orderId);
 	void pay(size_t orderId, double amount);
 
-	bool usernameDriverExists(const MyString& username) const;
 	void addDriverRating(const MyString& username, double rating);
 	void acceptOrder(size_t orderId);
 	void declineOrder(size_t orderId);
+	void checkOrder(size_t orderId);
 	void finishOrder(size_t orderId);
 	void checkMessages() const;
 	void changeAddress(Address&& address);

@@ -58,20 +58,7 @@ void ClientEvents::checkOrder(UberApplication* uberApplication) {
 		std::cin >> orderId;
 
 		const DynamicArray<Order>* ordersPtr = &uberApplication->getOrders();
-		bool orderFound = false;
-		for (size_t i = 0; i < ordersPtr->getSize(); i++)
-		{
-			if (ordersPtr->operator[](i).getId() == orderId)
-			{
-				ordersPtr->operator[](i).print();
-				orderFound = true;
-				break;
-			}
-		}
-		if (!orderFound)
-		{
-			throw std::runtime_error("ID not found");
-		}
+		uberApplication->checkOrder(orderId);
 	}
 	catch (std::runtime_error& rex)
 	{
@@ -86,7 +73,6 @@ void ClientEvents::cancelOrder(UberApplication* uberApplication) {
 		std::cout << "Input order ID: ";
 		std::cin >> orderId;
 
-		//uberApplication->removeOrder(orderId);
 		uberApplication->cancelOrder(orderId);
 	}
 	catch (std::runtime_error& rex)
