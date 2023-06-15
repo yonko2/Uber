@@ -71,6 +71,7 @@ void Driver::readFromFile(std::ifstream& ifs)
 
 void Driver::print() const
 {
+	std::cout << "Driver ";
 	User::print();
 	std::cout << "Rating: " << rating << '\n'
 		<< "Car number: " << carNumber << '\n'

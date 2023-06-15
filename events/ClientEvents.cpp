@@ -41,15 +41,7 @@ void ClientEvents::order(UberApplication* uberApplication) {
 
 	try
 	{
-		Order order{
-		dynamic_cast<Client*>(uberApplication->getLoggedUser()),
-		uberApplication->getNearestFreeDriverPtr(address.coordinates),
-		std::move(address),
-		std::move(destination),
-		passengersCount };
-
-		std::cout << "Order ID: " << order.getId() << std::endl;
-		uberApplication->addOrder(std::move(order));
+		uberApplication->order(std::move(address), std::move(destination), passengersCount);
 	}
 	catch (std::runtime_error& rex)
 	{
@@ -152,7 +144,7 @@ void ClientEvents::rate(UberApplication* uberApplication) {
 			std::cout << "Input rating (1-5): ";
 			std::cin >> rating;
 
-			if (isInRange(rating,1,5))
+			if (isInRange(rating, 1, 5))
 			{
 				throw std::runtime_error("Rating not in range.");
 			}
@@ -185,7 +177,7 @@ void ClientEvents::addMoney(UberApplication* uberApplication) {
 			throw std::runtime_error("Money amount must be positive.");
 		}
 
-		uberApplication->getLoggedUser()->addToBalance(amount);
+		uberApplication->addMoney(amount);
 	}
 	catch (std::runtime_error& rex)
 	{

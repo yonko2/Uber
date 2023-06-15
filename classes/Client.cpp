@@ -22,5 +22,6 @@ void Client::readFromFile(std::ifstream& ifs)
 
 void Client::print() const
 {
+	std::cout << "Client ";
 	User::print();
 }

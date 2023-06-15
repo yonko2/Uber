@@ -3,6 +3,7 @@
 void DriverEvents::acceptPayment(UberApplication* uberApplication) {
 	
 }
+
 void DriverEvents::acceptOrder(UberApplication* uberApplication) {
 	size_t orderId = 0;
 	std::cout << "Input order ID: ";
@@ -22,9 +23,11 @@ void DriverEvents::acceptOrder(UberApplication* uberApplication) {
 		std::cout << rex.what() << std::endl;
 	}
 }
-void DriverEvents::checkMessages(UberApplication* uberApplication) {
 
+void DriverEvents::checkMessages(UberApplication* uberApplication) {
+	uberApplication->checkMessages();
 }
+
 void DriverEvents::changeAddress(UberApplication* uberApplication) {
 	MyString addressName;
 	int coordXAddress = 0, coordYAddress = 0;
@@ -42,10 +45,10 @@ void DriverEvents::changeAddress(UberApplication* uberApplication) {
 
 	Address address{ addressName, coordXAddress, coordYAddress, addressDescription };
 
-	Driver* driverPtr = dynamic_cast<Driver*>(uberApplication->getLoggedUser());
-	driverPtr->setAddress(std::move(address));
+	uberApplication->changeAddress(std::move(address));
 	std::cout << "Address changed successfully." << std::endl;
 }
+
 void DriverEvents::declineOrder(UberApplication* uberApplication) {
 	size_t orderId = 0;
 	std::cout << "Input order ID: ";
@@ -60,6 +63,7 @@ void DriverEvents::declineOrder(UberApplication* uberApplication) {
 		std::cout << rex.what() << std::endl;
 	}
 }
+
 void DriverEvents::finishOrder(UberApplication* uberApplication) {
 	size_t orderId = 0;
 	std::cout << "Input order ID: ";

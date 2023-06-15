@@ -2,7 +2,6 @@
 #include "Address.h"
 #include "Client.h"
 #include "Driver.h"
-#include "../external/SharedPtr.hpp"
 #include "../external/DynamicArray.hpp"
 
 enum class OrderStatus
@@ -17,16 +16,19 @@ const char* OrderStatusToString(OrderStatus e);
 
 class Order
 {
+	friend class UberApplication;
+
 	static size_t latestId;
 
 	size_t id = 0;
-	Client* client;
-	Driver* driver;
+	Client* client = nullptr;
+	Driver* driver = nullptr;
 	Address address;
 	Address destination;
 	unsigned passengers = 0;
 	OrderStatus orderStatus = OrderStatus::created;
 	DynamicArray<size_t> declinedDriverIds;
+	double revenue = 0;
 
 public:
 	Order() = default;
@@ -39,8 +41,8 @@ public:
 	size_t getId() const;
 	OrderStatus getOrderStatus() const;
 	const Address& getAddress() const;
-	Client* getClient();
-	Driver* getDriver();
+	const Client* getClient() const;
+	const Driver* getDriver() const;
 	const DynamicArray<size_t>& getDeclinedDriverIds() const;
 	DynamicArray<size_t>& getDeclinedDriverIds();
 
@@ -51,5 +53,7 @@ public:
 
 	void print() const;
 	void setDriver(Driver* driverPtr);
+	void pay(double amount);
+	void giveRatingToDriver(double rating) const;
 };
 

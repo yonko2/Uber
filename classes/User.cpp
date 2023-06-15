@@ -99,8 +99,5 @@ void User::readFromFile(std::ifstream& ifs)
 
 void User::print() const
 {
-	std::cout << "Username: " << username << '\n'
-		<< "First name: " << firstName << '\n'
-		<< "Last name: " << lastName << '\n';
-		//<< "Balance: " << balance << std::endl;
+	std::cout << "Name: " << this->firstName << ' ' << this->lastName << std::endl;
 }

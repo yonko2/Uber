@@ -277,9 +277,9 @@ const User* UberApplication::getLoggedUser() const
 	return this->loggedUser;
 }
 
-User* UberApplication::getLoggedUser()
+void UberApplication::setLoggedUser(User* userPtr)
 {
-	return this->loggedUser;
+	this->loggedUser = userPtr;
 }
 
 bool UberApplication::getIsLoggedUserClient() const
@@ -349,15 +349,9 @@ void UberApplication::pay(const size_t orderId, const double amount)
 		if (this->orders[i].getId() == orderId &&
 			this->orders[i].getOrderStatus() == OrderStatus::completed)
 		{
-			Client* clientPtr = this->orders[i].getClient();
-			if (clientPtr->getBalance() - amount < 0)
-			{
-				throw std::logic_error("Not enough funds.");
-			}
-			clientPtr->addToBalance(-amount);
-
-			Driver* driverPtr = this->orders[i].getDriver();
-			driverPtr->addToBalance(amount);
+			// Throws if amount isn't enough
+			this->orders[i].pay(amount);
+			return;
 		}
 	}
 	throw std::runtime_error("Order ID not found.");
@@ -397,7 +391,7 @@ Driver* UberApplication::getNearestFreeDriverPtr(const Pair<int, int>& origin)
 				iterDist - currentMinDist < 0)
 			{
 				currentMinDist = iterDist;
-				currentNearestFreeDriverPtr = currentOrder->getDriver();
+				currentNearestFreeDriverPtr = currentOrder->driver;
 			}
 		}
 	}
@@ -428,7 +422,7 @@ void UberApplication::addDriverRating(const MyString& username, const double rat
 			if (orders[i].getClient() == this->getLoggedUser() &&
 				orders[i].getOrderStatus() == OrderStatus::completed)
 			{
-				orders[i].getDriver()->giveRating(rating);
+				orders[i].giveRatingToDriver(rating);
 				return;
 			}
 		}
@@ -532,6 +526,52 @@ void UberApplication::finishOrder(const size_t orderId)
 	}
 }
 
+void UberApplication::checkMessages() const
+{
+	const size_t ordersCount = orders.getSize();
+	const Driver* loggedDriver = dynamic_cast<Driver*>(this->loggedUser);
+
+	for (size_t i = 0; i < ordersCount; i++)
+	{
+		if (orders[i].getDriver() == loggedDriver)
+		{
+			orders[i].print();
+			std::cout << std::endl;
+		}
+	}
+}
+
+void UberApplication::changeAddress(Address&& address)
+{
+	if (isClient)
+	{
+		throw std::runtime_error("Can not change address of client");
+	}
+	dynamic_cast<Driver*>(this->loggedUser)->setAddress(std::move(address));
+}
+
+void UberApplication::order(Address&& address, Address&& destination, unsigned passengersCount)
+{
+	Order order{
+		dynamic_cast<Client*>(loggedUser),
+		getNearestFreeDriverPtr(address.coordinates),
+		std::move(address),
+		std::move(destination),
+		passengersCount };
+	std::cout << "Order ID: " << order.getId() << std::endl;
+
+}
+
+void UberApplication::addMoney(const double amount)
+{
+	if (!isClient)
+	{
+		throw std::runtime_error("Can't add money as non-client");
+	}
+
+	dynamic_cast<Client*>(this->loggedUser)->addToBalance(amount);
+}
+
 void UberApplication::login(const MyString& username, const MyString& password)
 {
 	const size_t clientsCount = this->clients.getSize();
@@ -583,7 +623,7 @@ void UberApplication::login(MyString&& username, MyString&& password)
 			usernameFound = true;
 			if (this->clients[i].comparePassword(password))
 			{
-				this->loggedUser = dynamic_cast<User*>(&this->clients[i]) ;
+				this->loggedUser = dynamic_cast<User*>(&this->clients[i]);
 				this->isClient = true;
 				return;
 			}
@@ -597,7 +637,7 @@ void UberApplication::login(MyString&& username, MyString&& password)
 			usernameFound = true;
 			if (this->drivers[i].comparePassword(password))
 			{
-				this->loggedUser = dynamic_cast<User*>(&this->drivers[i]) ;
+				this->loggedUser = dynamic_cast<User*>(&this->drivers[i]);
 				this->isClient = false;
 				return;
 			}

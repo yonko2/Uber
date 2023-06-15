@@ -59,12 +59,12 @@ const Address& Order::getAddress() const
 	return this->address;
 }
 
-Client* Order::getClient()
+const Client* Order::getClient() const
 {
 	return this->client;
 }
 
-Driver* Order::getDriver()
+const Driver* Order::getDriver() const
 {
 	return this->driver;
 }
@@ -151,15 +151,42 @@ void Order::readFromFile(DynamicArray<Client>* clientsPtr, DynamicArray<Driver>*
 
 void Order::print() const
 {
-	std::cout << "Order status: " << OrderStatusToString(this->orderStatus) << '\n';
+	std::cout << "Order ID: " << this->id << std::endl;
 
+	if (this->client != nullptr)
+	{
+		this->client->print();
+	}
 	if (this->driver != nullptr)
 	{
 		this->driver->print();
 	}
+
+	std::cout << "From: \n";
+	this->address.print();
+	std::cout << "To: \n";
+	this->destination.print();
+	std::cout << "Order status: " << OrderStatusToString(this->orderStatus) << '\n';
+
 }
 
 void Order::setDriver(Driver* driverPtr)
 {
 	this->driver = driverPtr;
+}
+
+void Order::pay(const double amount)
+{
+	if (client->getBalance() - amount < 0)
+	{
+		throw std::logic_error("Not enough funds.");
+	}
+
+	this->client->addToBalance(-amount);
+	this->revenue = amount;
+}
+
+void Order::giveRatingToDriver(const double rating) const
+{
+	this->driver->giveRating(rating);
 }
