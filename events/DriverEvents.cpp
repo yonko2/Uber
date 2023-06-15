@@ -19,15 +19,13 @@ void DriverEvents::acceptOrder(UberApplication* uberApplication) {
 	size_t orderId = 0;
 	std::cout << "Input order ID: ";
 	std::cin >> orderId;
+	short minutes = 0;
+	std::cout << "Input minutes: ";
+	std::cin >> minutes;
 
 	try
 	{
-		uberApplication->acceptOrder(orderId);
-
-		short minutes = 0;
-		std::cout << "Input minutes: ";
-		std::cin >> orderId;
-		// TODO: Impl print minutes for client on login.
+		uberApplication->acceptOrder(orderId, minutes);
 	}
 	catch (std::runtime_error& rex)
 	{

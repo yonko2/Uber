@@ -461,7 +461,7 @@ void UberApplication::addDriverRating(const MyString& username, const double rat
 	throw std::runtime_error("No valid order found.");
 }
 
-void UberApplication::acceptOrder(const size_t orderId)
+void UberApplication::acceptOrder(const size_t orderId, const int minutes)
 {
 	const size_t ordersCount = this->orders.getSize();
 	bool orderFound = false;
@@ -481,6 +481,7 @@ void UberApplication::acceptOrder(const size_t orderId)
 			}
 
 			this->orders[i].setOrderStatus(OrderStatus::accepted);
+			this->orders[i].setMinutes(minutes);
 		}
 	}
 
@@ -631,6 +632,18 @@ void UberApplication::login(const MyString& username, const MyString& password)
 	throw std::runtime_error("User with password not found.");
 }
 
+void UberApplication::printClientMinutesMsg() {
+	const size_t ordersCount = this->orders.getSize();
+
+	for (size_t i = 0; i < ordersCount; i++)
+	{
+		if (orders[i].getClient() == this->loggedUser) // revise
+		{
+			orders[i].printMinutesMsg();
+		}
+	}
+}
+
 void UberApplication::login(MyString&& username, MyString&& password)
 {
 	const size_t clientsCount = this->clients.getSize();
@@ -651,9 +664,14 @@ void UberApplication::login(MyString&& username, MyString&& password)
 			{
 				this->loggedUser = dynamic_cast<User*>(&this->clients[i]);
 				this->isClient = true;
-				return;
+				break;
 			}
 		}
+	}
+
+	if (this->isClient)
+	{
+		printClientMinutesMsg();
 	}
 
 	for (size_t i = 0; i < driversCount; i++)

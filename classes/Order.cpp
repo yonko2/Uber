@@ -54,6 +54,11 @@ OrderStatus Order::getOrderStatus() const
 	return this->orderStatus;
 }
 
+int Order::getMinutes() const
+{
+	return this->minutes;
+}
+
 const Address& Order::getAddress() const
 {
 	return this->address;
@@ -82,6 +87,11 @@ DynamicArray<size_t>& Order::getDeclinedDriverIds()
 void Order::setOrderStatus(const OrderStatus orderStatus)
 {
 	this->orderStatus = orderStatus;
+}
+
+void Order::setMinutes(const int minutes)
+{
+	this->minutes = minutes;
 }
 
 void Order::saveToFile(std::ofstream& ofs) const
@@ -189,4 +199,12 @@ void Order::pay(const double amount)
 void Order::giveRatingToDriver(const double rating) const
 {
 	this->driver->giveRating(rating);
+}
+
+void Order::printMinutesMsg() {
+	std::cout << "Your driver " << this->driver->getFirstName() << ' ' <<
+		this->driver->getLastName() << " will arrive in " <<
+		this->minutes << " minutes\n";
+
+	this->minutes = -1;
 }

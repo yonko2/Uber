@@ -49,6 +49,8 @@ public:
 	void load();
 	void save() const;
 
+	void printClientMinutesMsg();
+
 	void login(const MyString& username, const MyString& password);
 	void login(MyString&& username, MyString&& password);
 	void logout();
@@ -72,7 +74,7 @@ public:
 	void pay(size_t orderId, double amount);
 
 	void addDriverRating(const MyString& username, double rating);
-	void acceptOrder(size_t orderId);
+	void acceptOrder(size_t orderId, int minutes);
 	void declineOrder(size_t orderId);
 	void checkOrder(size_t orderId);
 	void finishOrder(size_t orderId);
