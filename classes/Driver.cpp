@@ -40,13 +40,6 @@ void Driver::saveToFile(std::ofstream& ofs) const
 	address.saveToFile(ofs);
 	ofs.write((const char*)&ratingsCount, sizeof ratingsCount);
 	ofs.write((const char*)&ratingSum, sizeof ratingSum);
-
-	/*const size_t ordersCount = newOrderIDs.getSize();
-	ofs.write((const char*)&ordersCount, sizeof ordersCount);
-	for (size_t i = 0; i < ordersCount; i++)
-	{
-		ofs.write((const char*)&this->newOrderIDs[i], sizeof this->newOrderIDs[i]);
-	}*/
 }
 
 void Driver::readFromFile(std::ifstream& ifs)
@@ -58,23 +51,20 @@ void Driver::readFromFile(std::ifstream& ifs)
 	address.readFromFile(ifs);
 	ifs.read((char*)&ratingsCount, sizeof ratingsCount);
 	ifs.read((char*)&ratingSum, sizeof ratingSum);
-
-	/*size_t ordersCount = 0;
-	ifs.read((char*)&ordersCount, sizeof ordersCount);
-	for (size_t i = 0; i < ordersCount; i++)
-	{
-		size_t currId = 0;
-		ifs.read((char*)&currId, sizeof currId);
-		this->newOrderIDs.pushBack(currId);
-	}*/
 }
 
 void Driver::print() const
 {
 	std::cout << "Driver ";
 	User::print();
-	std::cout << "Rating: " << rating << '\n'
-		<< "Car number: " << carNumber << '\n'
+	std::cout << "Rating: ";
+	if (rating != -1)
+	{
+		std::cout << rating << '\n';
+	}
+	else std::cout << "N/A\n";
+
+	std::cout << "Car number: " << carNumber << '\n'
 		<< "Phone number: " << phoneNumber << std::endl;
 }
 

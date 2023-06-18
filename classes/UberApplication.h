@@ -8,6 +8,7 @@ enum class SessionActions
 {
 	registerUser,
 	login,
+	stats,
 	exit
 };
 
@@ -31,13 +32,14 @@ class UberApplication // singleton
 	void loadOrders();
 
 	static bool checkBinariesAvailability();
-	Driver* getNearestFreeDriverPtr(const Pair<int, int>& origin);
+	Driver* getNearestFreeDriverPtr(const Pair<int, int>& origin, const DynamicArray<size_t>* declDriverIds);
 
 	UberApplication() = default;
 public:
 	UberApplication(const UberApplication& other) = delete;
 	UberApplication& operator=(const UberApplication& other) = delete;
 	void acceptPayment(size_t orderId);
+	void stats() const;
 
 	static UberApplication& getInstance();
 

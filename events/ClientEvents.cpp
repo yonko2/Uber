@@ -130,7 +130,7 @@ void ClientEvents::rate(UberApplication* uberApplication) {
 			std::cout << "Input rating (1-5): ";
 			std::cin >> rating;
 
-			if (isInRange(rating, 1, 5))
+			if (!isInRange(rating, 1, 5))
 			{
 				throw std::runtime_error("Rating not in range.");
 			}
@@ -146,7 +146,7 @@ void ClientEvents::rate(UberApplication* uberApplication) {
 	{
 		uberApplication->addDriverRating(username, rating);
 	}
-	catch (std::runtime_error& rex)
+	catch (std::exception& rex)
 	{
 		std::cout << rex.what() << std::endl;
 	}

@@ -27,7 +27,7 @@ void DriverEvents::acceptOrder(UberApplication* uberApplication) {
 	{
 		uberApplication->acceptOrder(orderId, minutes);
 	}
-	catch (std::runtime_error& rex)
+	catch (std::exception& rex)
 	{
 		std::cout << rex.what() << std::endl;
 	}

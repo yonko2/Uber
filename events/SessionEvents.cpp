@@ -116,3 +116,8 @@ void SessionEvents::login(UberApplication* uberApplication) {
 		}
 	} while (true);
 }
+
+void SessionEvents::stats(UberApplication* uberApplication)
+{
+	uberApplication->stats();
+}

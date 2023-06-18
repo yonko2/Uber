@@ -29,10 +29,11 @@ class Order
 	OrderStatus orderStatus = OrderStatus::created;
 	DynamicArray<size_t> declinedDriverIds;
 	double revenue = 0;
+	bool ratingGiven = false;
 	int minutes = -1;
 
 public:
-	Order() = default;
+	Order();
 	Order(Client* client, Driver* driver, const Address& address, const Address& destination, unsigned passengers);
 	Order(Client* client, Driver* driver, Address&& address, Address&& destination, unsigned passengers);
 
@@ -47,6 +48,7 @@ public:
 	const Driver* getDriver() const;
 	const DynamicArray<size_t>& getDeclinedDriverIds() const;
 	DynamicArray<size_t>& getDeclinedDriverIds();
+	double getRevenue() const;
 
 	void setOrderStatus(OrderStatus orderStatus);
 	void setMinutes(int minutes);
@@ -57,6 +59,7 @@ public:
 	void print() const;
 	void setDriver(Driver* driverPtr);
 	void pay(double amount);
+	void giveRatingToDriver(double rating);
 	void giveRatingToDriver(double rating) const;
 	void printMinutesMsg();
 };

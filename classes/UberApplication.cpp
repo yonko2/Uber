@@ -233,6 +233,26 @@ void UberApplication::acceptPayment(const size_t orderId)
 	throw std::runtime_error("ID not found");
 }
 
+void UberApplication::stats() const
+{
+	double revenueTotal = 0;
+	size_t completedOrders = 0;
+	size_t canceledOrders = 0;
+	
+	const size_t ordersCount = this->orders.getSize();
+	for (size_t i = 0; i < ordersCount; i++)
+	{
+		revenueTotal += this->orders[i].getRevenue();
+		completedOrders += this->orders[i].getOrderStatus() == OrderStatus::completed;
+		canceledOrders += this->orders[i].getOrderStatus() == OrderStatus::canceled;
+	}
+
+	std::cout << "Statistics: \n" <<
+		"Revenue: " << revenueTotal << '\n' <<
+		"Completed orders: " << completedOrders << '\n' <<
+		"Canceled orders: " << canceledOrders << std::endl;
+}
+
 UberApplication& UberApplication::getInstance()
 {
 	static UberApplication app;
@@ -270,10 +290,11 @@ void UberApplication::load()
 	// Don't load files if they're missing
 	if (!checkBinariesAvailability()) return;
 
-	loadSession();
 	loadClients();
 	loadDrivers();
 	loadOrders();
+
+	loadSession();
 }
 
 void UberApplication::save() const
@@ -390,7 +411,7 @@ double getDist(const Pair<int, int>& first, const Pair<int, int>& second)
 			std::pow(first.getSecond() - second.getSecond(), 2)));
 }
 
-Driver* UberApplication::getNearestFreeDriverPtr(const Pair<int, int>& origin)
+Driver* UberApplication::getNearestFreeDriverPtr(const Pair<int, int>& origin, const DynamicArray<size_t>* declDriverIds)
 {
 	const size_t driversCount = this->drivers.getSize();
 	if (driversCount == 0)
@@ -402,25 +423,40 @@ Driver* UberApplication::getNearestFreeDriverPtr(const Pair<int, int>& origin)
 	Driver* currentNearestFreeDriverPtr = nullptr;
 
 	const size_t ordersCount = this->orders.getSize();
-	for (size_t i = 0; i < ordersCount; i++)
-	{
-		Order* currentOrder = &orders[i];
-		const DynamicArray<size_t>* declDrivers = &currentOrder->getDeclinedDriverIds();
 
-		// Get nearest free driver
-		if (currentOrder->getOrderStatus() != OrderStatus::accepted && // accepted -> driver is unavailable
-			!declDrivers->contains(currentOrder->getDriver()->getId())) // driver hasn't declined
+	for (size_t dr = 0; dr < driversCount; dr++)
+	{
+		Driver* currentDriver = &this->drivers[dr];
+		bool validDriver = true;
+
+		if (declDriverIds->contains(currentDriver->getId()))
 		{
-			double iterDist = getDist(origin, currentOrder->getDriver()->getAddress().coordinates);
+			continue;
+		}
+
+		for (size_t i = 0; i < ordersCount; i++)
+		{
+			Order* currentOrder = &this->orders[i];
+
+			if (currentOrder->getOrderStatus() == OrderStatus::accepted) // accepted -> driver is unavailable
+			{
+				validDriver = false;
+			}
+		}
+
+		if (validDriver)
+		{
+			double iterDist = getDist(origin, currentDriver->getAddress().coordinates);
 
 			if (currentMinDist == -1 || // safe comparison, true only first time
 				iterDist - currentMinDist < 0)
 			{
 				currentMinDist = iterDist;
-				currentNearestFreeDriverPtr = currentOrder->driver;
+				currentNearestFreeDriverPtr = currentDriver;
 			}
 		}
 	}
+
 
 	return currentNearestFreeDriverPtr;
 }
@@ -514,7 +550,11 @@ void UberApplication::declineOrder(const size_t orderId)
 			this->orders[i].getDeclinedDriverIds().pushBack(this->orders[i].getDriver()->getId());
 
 			// Set driver to closest free one
-			this->orders[i].setDriver(this->getNearestFreeDriverPtr(this->orders[i].getAddress().coordinates));
+			this->orders[i].setDriver(
+				this->getNearestFreeDriverPtr(
+					this->orders[i].getAddress().coordinates,
+					&this->orders[i].getDeclinedDriverIds()
+				));
 		}
 	}
 
@@ -557,14 +597,22 @@ void UberApplication::checkMessages() const
 {
 	const size_t ordersCount = orders.getSize();
 	const Driver* loggedDriver = dynamic_cast<Driver*>(this->loggedUser);
+	bool matchFound = false;
 
 	for (size_t i = 0; i < ordersCount; i++)
 	{
-		if (orders[i].getDriver() == loggedDriver)
+		if (orders[i].getDriver() == loggedDriver &&
+			orders[i].getOrderStatus() == OrderStatus::created)
 		{
 			orders[i].print();
 			std::cout << std::endl;
+			matchFound = true;
 		}
+	}
+
+	if (matchFound == false)
+	{
+		std::cout << "No matches.\n";
 	}
 }
 
@@ -579,14 +627,17 @@ void UberApplication::changeAddress(Address&& address)
 
 void UberApplication::order(Address&& address, Address&& destination, unsigned passengersCount)
 {
+	const DynamicArray<size_t> temp;
+
 	Order order{
 		dynamic_cast<Client*>(loggedUser),
-		getNearestFreeDriverPtr(address.coordinates),
+		getNearestFreeDriverPtr(address.coordinates, &temp), // empty array of decl ids
 		std::move(address),
 		std::move(destination),
 		passengersCount };
 	std::cout << "Order ID: " << order.getId() << std::endl;
 
+	this->orders.pushBack(std::move(order));
 }
 
 void UberApplication::addMoney(const double amount)
@@ -610,6 +661,7 @@ void UberApplication::login(const MyString& username, const MyString& password)
 			{
 				this->loggedUser = dynamic_cast<User*>(&this->clients[i]);
 				this->isClient = true;
+				save();
 				return;
 			}
 		}
@@ -624,6 +676,7 @@ void UberApplication::login(const MyString& username, const MyString& password)
 			{
 				this->loggedUser = dynamic_cast<User*>(&this->drivers[i]);
 				this->isClient = false;
+				save();
 				return;
 			}
 		}
@@ -664,14 +717,11 @@ void UberApplication::login(MyString&& username, MyString&& password)
 			{
 				this->loggedUser = dynamic_cast<User*>(&this->clients[i]);
 				this->isClient = true;
-				break;
+				printClientMinutesMsg();
+				save();
+				return;
 			}
 		}
-	}
-
-	if (this->isClient)
-	{
-		printClientMinutesMsg();
 	}
 
 	for (size_t i = 0; i < driversCount; i++)
@@ -683,12 +733,13 @@ void UberApplication::login(MyString&& username, MyString&& password)
 			{
 				this->loggedUser = dynamic_cast<User*>(&this->drivers[i]);
 				this->isClient = false;
+				save();
 				return;
 			}
 		}
 	}
 
-	if (usernameFound)
+	if (!usernameFound)
 	{
 		throw std::runtime_error("User with username not found.");
 	}
@@ -698,4 +749,5 @@ void UberApplication::login(MyString&& username, MyString&& password)
 void UberApplication::logout()
 {
 	this->loggedUser = nullptr;
+	save();
 }

@@ -16,8 +16,17 @@ const char* OrderStatusToString(const OrderStatus e)
 	}
 }
 
+Order::Order()
+{
+	this->id = latestId;
+	latestId++;
+}
+
 Order::Order(Client* client, Driver* driver, const Address& address, const Address& destination, const unsigned passengers)
 {
+	this->id = latestId;
+	latestId++;
+
 	this->client = client;
 	this->driver = driver;
 	this->address = address;
@@ -27,6 +36,9 @@ Order::Order(Client* client, Driver* driver, const Address& address, const Addre
 
 Order::Order(Client* client, Driver* driver, Address&& address, Address&& destination, const unsigned passengers)
 {
+	this->id = latestId;
+	latestId++;
+
 	this->client = client;
 	this->driver = driver;
 	this->address = std::move(address);
@@ -196,15 +208,27 @@ void Order::pay(const double amount)
 	this->revenue = amount;
 }
 
-void Order::giveRatingToDriver(const double rating) const
+void Order::giveRatingToDriver(const double rating)
 {
+	if (this->ratingGiven)
+	{
+		throw std::logic_error("Rating already given.");
+	}
 	this->driver->giveRating(rating);
+	this->ratingGiven = true;
 }
 
 void Order::printMinutesMsg() {
+	if (this->minutes == -1) return;
+
 	std::cout << "Your driver " << this->driver->getFirstName() << ' ' <<
 		this->driver->getLastName() << " will arrive in " <<
 		this->minutes << " minutes\n";
 
 	this->minutes = -1;
+}
+
+double Order::getRevenue() const
+{
+	return this->revenue;
 }

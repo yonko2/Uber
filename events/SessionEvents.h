@@ -7,4 +7,5 @@ namespace SessionEvents
 	void registerDriver(UberApplication* uberApplication);
 	void registerUser(UberApplication* uberApplication);
 	void login(UberApplication* uberApplication);
+	void stats(UberApplication* uberApplication);
 }

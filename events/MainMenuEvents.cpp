@@ -5,7 +5,7 @@ ClientActions MenuInputGetters::getClientAction()
 	const short MIN_CLIENT_ACTION = 1;
 	const short MAX_CLIENT_ACTION = 8;
 
-	std::cout << "Choose an option:\n1) Make order\n2) Check order\n3) Cancel order\n"
+	std::cout << "\nChoose an option:\n1) Make order\n2) Check order\n3) Cancel order\n"
 		<< "4) Pay\n5) Rate\n6) Add money\n7) Logout\n8) Exit\n";
 	short clientOption = 0;
 	std::cin >> clientOption;
@@ -36,9 +36,10 @@ ClientActions MenuInputGetters::getClientAction()
 SessionActions MenuInputGetters::getSessionAction()
 {
 	const short MIN_SESSION_ACTION = 1;
-	const short MAX_SESSION_ACTION = 3;
+	const short MAX_SESSION_ACTION = 4;
 
-	std::cout << "Choose an option:\n1) Register user\n2) Login\n3) Exit\n";
+	std::cout << "\nChoose an option:\n1) Register user\n" <<
+			  "2) Login\n3) Stats\n4) Exit\n";
 	short sessionOption = 0;
 	std::cin >> sessionOption;
 
@@ -54,7 +55,8 @@ SessionActions MenuInputGetters::getSessionAction()
 	{
 	case 1: return SessionActions::registerUser;
 	case 2: return SessionActions::login;
-	case 3: return SessionActions::exit;
+	case 3: return SessionActions::stats;
+	case 4: return SessionActions::exit;
 	default:
 		throw std::logic_error("Unknown command.");
 	}
@@ -65,7 +67,7 @@ DriverActions MenuInputGetters::getDriverAction()
 	const short MIN_DRIVER_ACTION = 1;
 	const short MAX_DRIVER_ACTION = 8;
 
-	std::cout << "Choose an option:\n1) Change address\n2) Check messages\n"
+	std::cout << "\nChoose an option:\n1) Change address\n2) Check messages\n"
 		<< "3) Accept order\n4) Decline order\n5) Finish order\n6) Accept payment\n"
 		<< "7) Logout\n8) Exit\n";
 	short sessionOption = 0;
@@ -103,6 +105,9 @@ void MainMenuEvents::handleLoginOrRegisterMenu(UberApplication* uberApplication)
 		break;
 	case SessionActions::login:
 		SessionEvents::login(uberApplication);
+		break;
+	case SessionActions::stats:
+		SessionEvents::stats(uberApplication);
 		break;
 	case SessionActions::exit:
 		exitApplication(uberApplication);
