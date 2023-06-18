@@ -189,7 +189,6 @@ void Order::print() const
 	std::cout << "To: \n";
 	this->destination.print();
 	std::cout << "Order status: " << OrderStatusToString(this->orderStatus) << '\n';
-
 }
 
 void Order::setDriver(Driver* driverPtr)
