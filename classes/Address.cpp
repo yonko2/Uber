@@ -65,6 +65,6 @@ void Address::readFromFile(std::ifstream& ifs)
 void Address::print() const
 {
 	std::cout << name << ' '
-		<< coordinates.getFirst() << ' ' << coordinates.getSecond()
+		<< coordinates.getFirst() << ' ' << coordinates.getSecond() << ' '
 		<< description << std::endl;
 }

@@ -38,7 +38,6 @@ class UberApplication // singleton
 public:
 	UberApplication(const UberApplication& other) = delete;
 	UberApplication& operator=(const UberApplication& other) = delete;
-	void acceptPayment(size_t orderId);
 	void stats() const;
 
 	static UberApplication& getInstance();
@@ -84,6 +83,7 @@ public:
 	void changeAddress(Address&& address);
 	void order(Address&& address, Address&& destination, unsigned passengersCount);
 	void addMoney(double amount);
+	void acceptPayment(size_t orderId);
 };
 
 static double getDist(const Pair<int, int>& first, const Pair<int, int>& second);

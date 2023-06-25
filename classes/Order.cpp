@@ -122,6 +122,7 @@ void Order::saveToFile(std::ofstream& ofs) const
 	ofs.write((const char*)&driverId, sizeof driverId);
 
 	address.saveToFile(ofs);
+	destination.saveToFile(ofs);
 	ofs.write((const char*)&passengers, sizeof passengers);
 	ofs.write((const char*)&orderStatus, sizeof orderStatus);
 
@@ -160,6 +161,7 @@ void Order::readFromFile(DynamicArray<Client>* clientsPtr, DynamicArray<Driver>*
 	}
 
 	address.readFromFile(ifs);
+	destination.readFromFile(ifs);
 	ifs.read((char*)&passengers, sizeof passengers);
 	ifs.read((char*)&orderStatus, sizeof orderStatus);
 

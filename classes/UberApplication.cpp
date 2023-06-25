@@ -228,6 +228,7 @@ void UberApplication::acceptPayment(const size_t orderId)
 		if (orders[i].getId() == orderId)
 		{
 			orders[i].driver->addToBalance(orders[i].revenue);
+			return;
 		}
 	}
 	throw std::runtime_error("ID not found");

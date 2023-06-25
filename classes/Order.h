@@ -60,7 +60,6 @@ public:
 	void setDriver(Driver* driverPtr);
 	void pay(double amount);
 	void giveRatingToDriver(double rating);
-	void giveRatingToDriver(double rating) const;
 	void printMinutesMsg();
 };
 

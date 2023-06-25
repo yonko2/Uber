@@ -93,7 +93,7 @@ void ClientEvents::pay(UberApplication* uberApplication) {
 	{
 		uberApplication->pay(orderId, amount);
 	}
-	catch (std::runtime_error& rex)
+	catch (std::exception& rex)
 	{
 		std::cout << rex.what() << std::endl;
 	}
@@ -165,7 +165,7 @@ void ClientEvents::addMoney(UberApplication* uberApplication) {
 
 		uberApplication->addMoney(amount);
 	}
-	catch (std::runtime_error& rex)
+	catch (std::exception& rex)
 	{
 		std::cout << rex.what();
 	}

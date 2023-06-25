@@ -48,8 +48,8 @@ void DriverEvents::changeAddress(UberApplication* uberApplication) {
 	std::cin >> coordYAddress;
 	std::cout << "Input address description (Press Enter for none): ";
 	char buffer[256]{};
-	std::cin.getline(buffer, 256);
 	std::cin.ignore();
+	std::cin.getline(buffer, 256);
 	MyString addressDescription{ buffer };
 
 	Address address{ addressName, coordXAddress, coordYAddress, addressDescription };
@@ -67,7 +67,7 @@ void DriverEvents::declineOrder(UberApplication* uberApplication) {
 	{
 		uberApplication->declineOrder(orderId);
 	}
-	catch (std::runtime_error& rex)
+	catch (std::exception& rex)
 	{
 		std::cout << rex.what() << std::endl;
 	}
@@ -82,7 +82,7 @@ void DriverEvents::finishOrder(UberApplication* uberApplication) {
 	{
 		uberApplication->finishOrder(orderId);
 	}
-	catch (std::runtime_error& rex)
+	catch (std::exception& rex)
 	{
 		std::cout << rex.what() << std::endl;
 	}
